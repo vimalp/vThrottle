@@ -10,6 +10,7 @@
 //
 
 #pragma once
+
 #define NUM_TURNOUTS    5
 // Following ids are defined for turnouts in CommandStation's myautomatioh.h
 // Define macros for controlling single coil turnouts using DCC decoders
@@ -32,14 +33,21 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+//--------------------------------------------------------
+// debug print macros
+//--------------------------------------------------------
+extern void c_serial_print(const char* message);
 
+extern void clearLocoList(int thr_idx); 
 extern void setDccLocoSpeed(int thr_idx, int speed_val, int dir);
 extern void setDccHorn(int thr_idx, int val);
 extern void setDccTurnout(int turnout_idx, int val);
 extern void setLocoList(int thr_idx, int loco_idx, const char* name, uint32_t addr);
 extern void selectLoco(int thr_idx, int loco_idx);
 extern void assignLocoToThrottle(int thr_idx, int loco_idx);
+extern void setDccFunc(int thr_idx, int func_num, int val);
 extern void gotoSleep();
+extern void reset();
 
 #ifdef __cplusplus
 }

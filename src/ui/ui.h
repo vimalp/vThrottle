@@ -47,8 +47,8 @@ LV_IMG_DECLARE( ui_img_loco_fwd_png);   // assets/loco_fwd.png
 LV_IMG_DECLARE( ui_img_loco_rev_png);   // assets/loco_rev.png
 LV_IMG_DECLARE( ui_img_horn_png);   // assets/horn.png
 LV_IMG_DECLARE( ui_img_sound_wave_png);   // assets/sound_wave.png
-LV_IMG_DECLARE( ui_img_sound_png);   // assets/sound.png
 LV_IMG_DECLARE( ui_img_sound_off_png);   // assets/sound_off.png
+LV_IMG_DECLARE( ui_img_sound_png);   // assets/sound.png
 
 // UI INIT
 void ui_init(void);

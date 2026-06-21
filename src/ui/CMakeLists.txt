@@ -16,7 +16,7 @@ SET(SOURCES ui_Home.c
     ui_img_loco_rev_png.c
     ui_img_horn_png.c
     ui_img_sound_wave_png.c
-    ui_img_sound_png.c
-    ui_img_sound_off_png.c)
+    ui_img_sound_off_png.c
+    ui_img_sound_png.c)
 
 add_library(ui ${SOURCES})

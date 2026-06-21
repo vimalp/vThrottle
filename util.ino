@@ -13,6 +13,39 @@
 //
 #include "esp32_tft_throttle.h"
 
+//------------------------------------------------------------------
+// Print function for ui_events.c
+//------------------------------------------------------------------
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void c_serial_print(const char* message) 
+{
+    if (_DEBUG_)
+      Serial.println(message); // C++ object called safely inside a wrapper
+}
+
+#ifdef __cplusplus
+}
+#endif
+
+//------------------------------------------------------------------
+// Show wifi status
+//------------------------------------------------------------------
+
+void show_wifi_status()
+{
+  // check if displayinh is needed
+  int32_t rssi = WiFi.RSSI();
+
+  int signalPct = 0;
+  if (rssi < -100)        signalPct = 0;
+  else if (rssi >= - 50)  signalPct = 100;
+  else                    signalPct = 2 * (rssi + 100);
+
+  lv_bar_set_value(ui_WifiLevel, signalPct, LV_ANIM_ON);
+}
 
 //------------------------------------------------------------------
 // display track power status as LED
@@ -42,6 +75,11 @@ void updateTrackPower(TrackPower trk_pwr)
 
 void updateRoster()
 {
+  // clear all old lists
+  for (int thr_idx = 0; thr_idx < NUM_THROTTLES; ++thr_idx) {
+      clearLocoList(thr_idx);       
+  }
+
   // update the loco list on dropdown menu 
   int loco_idx = 0;
   for (Loco *loco = dccexProtocol.roster->getFirst(); loco; loco = loco->getNext()) {
@@ -76,8 +114,10 @@ void updateRoster()
         locoList[tidx] = loco;
       }
     }
-    DEBUG_PRINTF("Throttle[%d] -> loco %d\n", tidx, locoAddr);
-    selectLoco(tidx, loco_idx);
+    if (tidx < NUM_THROTTLES) {
+      DEBUG_PRINTF("Throttle[%d] -> loco %d\n", tidx, locoAddr);
+      selectLoco(tidx, loco_idx);
+    }
     loco_idx++;
   }
 }
@@ -147,11 +187,16 @@ void setDccLocoSpeed(int thr_idx, int speed_val, int dir)
 
 void setDccHorn(int thr_idx, int val)
 {
+   setDccFunc(thr_idx, THR_HORN_TO_DCC_FN, val);
+ }
+
+void setDccFunc(int thr_idx, int func_num, int val)
+{
   if (thr_idx >= 0 && thr_idx < NUM_THROTTLES && locoList[thr_idx]) {
     if (val)
-        dccexProtocol.functionOn(locoList[thr_idx], THR_HORN_TO_DCC_FN);
+        dccexProtocol.functionOn(locoList[thr_idx], func_num);
       else
-        dccexProtocol.functionOff(locoList[thr_idx], THR_HORN_TO_DCC_FN);
+        dccexProtocol.functionOff(locoList[thr_idx], func_num);
   }
 }
 
@@ -168,6 +213,14 @@ void setDccTurnout(int turn_idx, int val)
 }
 
 //----------------------------------------------------------------------------
+// Reset throttle and restart
+//----------------------------------------------------------------------------
+
+void reset()
+{
+  esp_restart();  
+}
+//----------------------------------------------------------------------------
 // Turn off esp32 and put it to sleep.
 // Set all DCC throttles to 0 to stop all trains
 //----------------------------------------------------------------------------
@@ -179,6 +232,17 @@ void gotoSleep()
     setDccLocoSpeed(thr_idx, 0, Direction::Forward);
   }
 
+  // reset input touch pad 
+  lv_indev_t * indev = NULL;
+  for(indev = lv_indev_get_next(NULL); indev != NULL; indev = lv_indev_get_next(indev)) {
+    // Check type, e.g., LV_INDEV_TYPE_POINTER, LV_INDEV_TYPE_KEYPAD, etc.
+    if(lv_indev_get_type(indev) == LV_INDEV_TYPE_POINTER) {
+        lv_indev_reset(indev, NULL);
+        break;
+    }
+  }
+
+  //esp_sleep_enable_ext0_wakeup(TOUCH_GT911_INT, LOW);
   esp_deep_sleep_start();
 }
 

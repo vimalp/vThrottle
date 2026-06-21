@@ -18,6 +18,7 @@ void openLocoFunc(lv_event_t * e);
 void setLocoHorn(lv_event_t * e);
 void showRoutes(lv_event_t * e);
 void showTrainRoutes(lv_event_t * e);
+void resetEsp(lv_event_t * e);
 void powerOff(lv_event_t * e);
 void setLocoFunc(lv_event_t * e);
 

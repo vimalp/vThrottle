@@ -4,8 +4,8 @@
 // Project name: esp32_tft_throttle
 
 #include "ui.h"
+#include <Arduino.h>
 #include "my_turnout.h"
-
 
 
 //------------------------------------------------------------
@@ -13,6 +13,22 @@
 // This is done when a new roster is received from DCC-EX 
 // at startup time.
 //-------------------------------------------------------------
+void clearLocoList(int thr_idx) 
+{
+	lv_obj_t*		dropdown = NULL;
+		
+	switch (thr_idx) {
+		case 0: dropdown = ui_LocoName0; break;
+		case 1: dropdown = ui_LocoName1; break;
+		case 2: dropdown = ui_LocoName2; break;
+		default: break;
+	}
+	if (!dropdown) return;
+
+	lv_dropdown_clear_options(dropdown);
+}
+
+
 void setLocoList(int thr_idx, int loco_idx, const char* name, uint32_t addr) 
 {
 	lv_obj_t*		dropdown = NULL;
@@ -27,16 +43,19 @@ void setLocoList(int thr_idx, int loco_idx, const char* name, uint32_t addr)
 	if (!dropdown) return;
 
 	snprintf(optStr, sizeof(optStr), "%d: %s", addr, name);
-	lv_dropdown_add_option(dropdown, optStr, thr_idx);
+	c_serial_print(optStr);
+	lv_dropdown_add_option(dropdown, optStr, loco_idx);
 }
 
 //------------------------------------------------------------
 // assign a throttle to a loco index in dropdown menu
+// This is called to assign a loco to a throttle at startup.
 //------------------------------------------------------------
 
 void selectLoco(int thr_idx, int loco_idx)
 {
 	lv_obj_t*		dropdown = NULL;
+	char			  dbgStr[40];
 
 	switch (thr_idx) {
 		case 0: dropdown = ui_LocoName0; break;
@@ -45,7 +64,34 @@ void selectLoco(int thr_idx, int loco_idx)
 		default: break;
 	}
 	if (!dropdown) return;
+
+	snprintf(dbgStr, sizeof(dbgStr), "Select Loco: throttle=%d, locoIdx=%d\n", thr_idx, loco_idx);
+	c_serial_print(dbgStr);
 	lv_dropdown_set_selected(dropdown, loco_idx);
+}
+
+
+//------------------------------------------------------
+// A new loco is selected from dropdown menu. 
+// Associate the loco with throttle slider
+//------------------------------------------------------
+void setThrottleLoco(lv_event_t * e)
+{
+	char		locoStr[40];
+	char		dbgStr[40];
+	lv_obj_t* dropdown = lv_event_get_current_target(e);
+
+	int thr_idx = -1;
+	if 			(dropdown == ui_LocoName0) { thr_idx = 0; }
+	else if (dropdown == ui_LocoName1) { thr_idx = 1; }
+	else if (dropdown == ui_LocoName2) { thr_idx = 2; }
+	if (thr_idx < 0) return;
+
+	int loco_idx = lv_dropdown_get_selected(dropdown);
+	lv_dropdown_get_selected_str(dropdown, locoStr, sizeof(locoStr));
+	snprintf(dbgStr, sizeof(dbgStr), "setThrottleLoco: loco_idx=%d, str=%s\n", loco_idx, locoStr);
+	c_serial_print(dbgStr);
+	assignLocoToThrottle(thr_idx, loco_idx);
 }
 
 //------------------------------------------------------------
@@ -60,8 +106,8 @@ void setLocoSpeed(lv_event_t * e)
 	
 	int	lidx = -1;
 	if 			(slider == ui_LocoThr0)	{ lidx = 0;	dirBtn = ui_LocoRev0; }
-	else if (slider == ui_LocoThr0)	{ lidx = 1;	dirBtn = ui_LocoRev1; }
-	else if (slider == ui_LocoThr0)	{ lidx = 2;	dirBtn = ui_LocoRev2; }
+	else if (slider == ui_LocoThr1)	{ lidx = 1;	dirBtn = ui_LocoRev1; }
+	else if (slider == ui_LocoThr2)	{ lidx = 2;	dirBtn = ui_LocoRev2; }
 
 	if (lidx < 0) return;
 
@@ -93,14 +139,20 @@ void setLocReverse(lv_event_t * e)
 void setLocoHorn(lv_event_t * e)
 {
 	lv_obj_t* hornBtn = lv_event_get_current_target(e);
-	
+	char		  dbgStr[40];
+
 	int	lidx = -1;
 	if 			(hornBtn == ui_horn0)	{ lidx = 0; }
 	else if (hornBtn == ui_horn1)	{ lidx = 1; }
 	else if (hornBtn == ui_horn2)	{ lidx = 2; }
 	if (lidx < 0) return;
 
-	int32_t val = (lv_obj_has_state(hornBtn, LV_STATE_PRESSED) ? 1 : 0);
+	bool btnPressed = lv_obj_has_state(hornBtn, LV_STATE_PRESSED);
+	bool btnChecked = lv_obj_has_state(hornBtn, LV_STATE_CHECKED);
+	snprintf(dbgStr, sizeof(dbgStr), "setLocoHorn: pressed=%d, checked=%d\n", btnPressed, btnChecked);
+	c_serial_print(dbgStr);
+
+	int32_t val = ((btnPressed || btnChecked) ? 1 : 0);
 	setDccHorn(lidx, val);
 }
 
@@ -127,7 +179,7 @@ void setLocoFunc(lv_event_t * e)
 	lv_obj_t* funcBtn = lv_event_get_current_target(e);
 
 	int func_num = -1;
-	if 			(funcBtn == ui_HeadLightF1)	{ func_num = 1; }
+	if 			(funcBtn == ui_HeadLightF0)	{ func_num = 0; }
 	else if (funcBtn == ui_CouplerF3)	{ func_num = 3; }
 	else if (funcBtn == ui_FlangeF7)	{ func_num = 7; }
 	else if (funcBtn == ui_MasterSoundF8)	{ func_num = 8; }
@@ -135,7 +187,11 @@ void setLocoFunc(lv_event_t * e)
 
 	if (curFuncBtnIdx < 0 || func_num < 0)
 		return;
-	assignLocoToThrottle(curFuncBtnIdx, func_num);
+
+	bool btnChecked = lv_obj_has_state(funcBtn, LV_STATE_CHECKED);
+	int32_t val = (btnChecked) ? 1 : 0;
+
+	setDccFunc(curFuncBtnIdx, func_num, val);
 }
 
 void showLocoRoster(lv_event_t * e)
@@ -170,23 +226,12 @@ void setTurnOut(lv_event_t * e)
 }
 
 
-// 
-// A new loco is selected from dropdown menu. 
-// Associate the loco with throttle slider
-void setThrottleLoco(lv_event_t * e)
-{
-	lv_obj_t* dropdown = lv_event_get_current_target(e);
-	int thr_idx = -1;
-	if 			(dropdown == ui_LocoName0) { thr_idx = 0; }
-	else if (dropdown == ui_LocoName1) { thr_idx = 1; }
-	else if (dropdown == ui_LocoName2) { thr_idx = 2; }
-	if (thr_idx < 0) return;
-
-	int loco_idx = lv_dropdown_get_selected(dropdown);
-	assignLocoToThrottle(thr_idx, loco_idx);
-}
-
 void powerOff(lv_event_t * e)
 {
 	gotoSleep();
+}
+
+void resetEsp(lv_event_t * e)
+{
+	reset();
 }

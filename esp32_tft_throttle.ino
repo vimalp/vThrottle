@@ -17,7 +17,6 @@
 #include "LovyanGFX_Driver.h"
 #include <lvgl.h>
 #include <stdbool.h>
-
 #include "src/ui/ui.h"
 #include "delegate.h"
 
@@ -31,6 +30,8 @@ LGFX gfx;
 static lv_disp_draw_buf_t draw_buf;
 static lv_color_t *buf;
 static lv_color_t *buf1;
+static lv_disp_drv_t disp_drv;
+static lv_indev_drv_t indev_drv;       
 
 uint16_t touch_x, touch_y;
 
@@ -84,7 +85,7 @@ void my_touchpad_read( lv_indev_drv_t * indev_driver, lv_indev_data_t * data )
     //  Set coordinates
     data->point.x = touch_x;
     data->point.y = touch_y;
-    DEBUG_PRINTF("Screen Touched! X: %d, Y: %d\n", data->point.x, data->point.y);
+    //DEBUG_PRINTF("Screen Touched! X: %d, Y: %d\n", data->point.x, data->point.y);
   }
 }
 
@@ -122,9 +123,11 @@ void setup()
 {
   char    dbgStr[80];
   uint8_t dx, dy;
+  const uint32_t charHeight = 30;     // for font4
+
   Serial.begin(115200); 
 
-  // pinMode(19, OUTPUT);   General output on uart pin
+  pinMode(TOUCH_GT911_INT, INPUT_PULLUP);   // touch pad interrupt pin for sleep wakeup
 
   // turn on the touch panel controller and backlight controller
   Wire.begin(TOUCH_GT911_SDA, TOUCH_GT911_SCL);
@@ -142,7 +145,7 @@ void setup()
       pinMode(1, OUTPUT);
       digitalWrite(1, LOW);
       delay(120);
-      pinMode(1, INPUT);
+      pinMode(1, INPUT_PULLUP);
 
       delay(100);
     }
@@ -168,7 +171,6 @@ void setup()
   lv_disp_draw_buf_init(&draw_buf, buf, buf1, LCD_H_RES * LCD_V_RES);
 
   // Initialize display
-  static lv_disp_drv_t disp_drv;
   lv_disp_drv_init(&disp_drv);
   // Change the following lines to your display resolution
   disp_drv.hor_res = LCD_H_RES;
@@ -178,7 +180,6 @@ void setup()
   lv_disp_drv_register(&disp_drv);
 
   // Initialize input device driver program
-  static lv_indev_drv_t indev_drv;
   lv_indev_drv_init(&indev_drv);
   indev_drv.type = LV_INDEV_TYPE_POINTER;
   indev_drv.read_cb = my_touchpad_read;
@@ -195,20 +196,20 @@ void setup()
 
   snprintf(dbgStr, sizeof(dbgStr), "Connecting to wifi with SSID: %s....\n", ssid);
   gfx.drawString(dbgStr, dx, dy);
-  dy += 20;
+  dy += charHeight;
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED)
     delay(1000);
   snprintf(dbgStr, sizeof(dbgStr), "Connected with SSID: %s\n", ssid);
   gfx.drawString(dbgStr, dx, dy);
-  dy += 20;
+  dy += charHeight;
   DEBUG_PRINTF(dbgStr);
 
  //----------------------------------------------------
   // Initialize dcc-ex protocol 
   //----------------------------------------------------
   gfx.drawString("Connecting to DCC-EX server...", dx, dy);
-  dy += 20;
+  dy += charHeight;
 
   if (!client.connect(serverAddress, serverPort)) {
     DEBUG_PRINTF("connection failed");
@@ -216,7 +217,7 @@ void setup()
       delay(1000);
   }
   gfx.drawString("Connected to DCC-EX server", dx, dy);
-  dy += 20;
+  dy += charHeight;
 
 #if _DEBUG_
   dccexProtocol.setLogStream(&Serial);
@@ -237,13 +238,19 @@ void setup()
   dccexProtocol.sendCommand("<J T>") ;
   dccexProtocol.getLists(true, true, false, false);
 
+  // reset the HAL (i.e. serial interface etc)
+  dccexProtocol.sendCommand("<D HAL RESET>");
+
   // wait till we get the lists
   gfx.drawString("Waiting for roster/turnout lists from DCC-ex....", dx, dy);
-  dy += 20;
+  dy += charHeight;
 
+#if 0
   while (!dccexProtocol.receivedLists()) {
+      dccexProtocol.check();
       delay(100);
   }
+#endif
 
   //----------------------------------------------------
   // lv_demo_widgets();// Main UI interface
@@ -254,6 +261,14 @@ void setup()
 
 void loop()
 {
+    // parse incoming messages
+  dccexProtocol.check();
+
   lv_timer_handler(); /* let the GUI do its work */
+
+  if ((millis()/32000) & 0x1) {    // show every 16 second
+    show_wifi_status();
+  }
+
   delay(1);
 }

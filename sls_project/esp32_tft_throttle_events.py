@@ -54,3 +54,7 @@ def closeRosterDisplay(event_struct):
 def setThrottleLoco(event_struct):
     return
 
+
+def resetEsp(event_struct):
+    return
+
