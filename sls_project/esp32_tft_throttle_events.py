@@ -38,3 +38,19 @@ def showTrainRoutes(event_struct):
 def showRoutes(event_struct):
     return
 
+
+def setLocReverse(event_struct):
+    return
+
+
+def powerOff(event_struct):
+    return
+
+
+def closeRosterDisplay(event_struct):
+    return
+
+
+def setThrottleLoco(event_struct):
+    return
+

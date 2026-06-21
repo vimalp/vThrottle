@@ -11,15 +11,15 @@ extern "C" {
 #endif
 
 void setTurnOut(lv_event_t * e);
+void setThrottleLoco(lv_event_t * e);
 void setLocoSpeed(lv_event_t * e);
 void setLocReverse(lv_event_t * e);
 void openLocoFunc(lv_event_t * e);
 void setLocoHorn(lv_event_t * e);
-void showLocoRoster(lv_event_t * e);
 void showRoutes(lv_event_t * e);
 void showTrainRoutes(lv_event_t * e);
+void powerOff(lv_event_t * e);
 void setLocoFunc(lv_event_t * e);
-void setLocoName(int thr_idx, const char* name);
 
 #ifdef __cplusplus
 } /*extern "C"*/

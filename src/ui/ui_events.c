@@ -6,20 +6,51 @@
 #include "ui.h"
 #include "my_turnout.h"
 
-void setLocoName(int thr_idx, const char* name)
+
+
+//------------------------------------------------------------
+// Sets loco names dropdown menus with loco address and names
+// This is done when a new roster is received from DCC-EX 
+// at startup time.
+//-------------------------------------------------------------
+void setLocoList(int thr_idx, int loco_idx, const char* name, uint32_t addr) 
 {
-		lv_obj_t*	label = NULL;
-		switch(thr_idx) {
-			case 0:	label = ui_LocoName0; break;
-			case 1:	label = ui_LocoName1; break;
-			case 2:	label = ui_LocoName2; break;
-			default: break;
-		}
-		
-		if (!label) return;
-		lv_label_set_text(label, name);
+	lv_obj_t*		dropdown = NULL;
+	char			  optStr[40];
+
+	switch (thr_idx) {
+		case 0: dropdown = ui_LocoName0; break;
+		case 1: dropdown = ui_LocoName1; break;
+		case 2: dropdown = ui_LocoName2; break;
+		default: break;
+	}
+	if (!dropdown) return;
+
+	snprintf(optStr, sizeof(optStr), "%d: %s", addr, name);
+	lv_dropdown_add_option(dropdown, optStr, thr_idx);
 }
 
+//------------------------------------------------------------
+// assign a throttle to a loco index in dropdown menu
+//------------------------------------------------------------
+
+void selectLoco(int thr_idx, int loco_idx)
+{
+	lv_obj_t*		dropdown = NULL;
+
+	switch (thr_idx) {
+		case 0: dropdown = ui_LocoName0; break;
+		case 1: dropdown = ui_LocoName1; break;
+		case 2: dropdown = ui_LocoName2; break;
+		default: break;
+	}
+	if (!dropdown) return;
+	lv_dropdown_set_selected(dropdown, loco_idx);
+}
+
+//------------------------------------------------------------
+// set locomotive speed from the slider widget
+//------------------------------------------------------------
 
 void setLocoSpeed(lv_event_t * e)
 {
@@ -38,6 +69,10 @@ void setLocoSpeed(lv_event_t * e)
 	setDccLocoSpeed(lidx, speedVal, dir);
 }
 
+//------------------------------------------------------------
+// set locomotive direction
+//------------------------------------------------------------
+
 void setLocReverse(lv_event_t * e)
 {
 	lv_obj_t* dirBtn = lv_event_get_current_target(e);
@@ -54,10 +89,6 @@ void setLocReverse(lv_event_t * e)
 	setDccLocoSpeed(lidx, speedVal, dir);
 }
 
-void openLocoFunc(lv_event_t * e)
-{
-	// Your code here
-}
 
 void setLocoHorn(lv_event_t * e)
 {
@@ -73,9 +104,38 @@ void setLocoHorn(lv_event_t * e)
 	setDccHorn(lidx, val);
 }
 
+//-----------------------------------------------------
+// Loco Function setting
+//-----------------------------------------------------
+
+static int curFuncBtnIdx = -1;
+
+// Opened the function panel. Save the index of throttle for which the function panel as opened.
+void openLocoFunc(lv_event_t * e)
+{
+		lv_obj_t*	funcBtn = lv_event_get_current_target(e);
+
+		// set curFuncBtnIdx which will be later used by 'setLocoFunc'
+		curFuncBtnIdx = -1;
+		if 			(funcBtn == ui_FuncButton0)	{ curFuncBtnIdx = 0; }
+		else if (funcBtn == ui_FuncButton1)	{ curFuncBtnIdx = 1; }
+		else if (funcBtn == ui_FuncButton2)	{ curFuncBtnIdx = 2; }
+}
+
 void setLocoFunc(lv_event_t * e)
 {
-	// Your code here
+	lv_obj_t* funcBtn = lv_event_get_current_target(e);
+
+	int func_num = -1;
+	if 			(funcBtn == ui_HeadLightF1)	{ func_num = 1; }
+	else if (funcBtn == ui_CouplerF3)	{ func_num = 3; }
+	else if (funcBtn == ui_FlangeF7)	{ func_num = 7; }
+	else if (funcBtn == ui_MasterSoundF8)	{ func_num = 8; }
+	else if (funcBtn == ui_RadiatorF11)	{ func_num = 11; }
+
+	if (curFuncBtnIdx < 0 || func_num < 0)
+		return;
+	assignLocoToThrottle(curFuncBtnIdx, func_num);
 }
 
 void showLocoRoster(lv_event_t * e)
@@ -107,4 +167,26 @@ void setTurnOut(lv_event_t * e)
 		
 	int32_t val = (lv_obj_has_state(turnoutBtn, LV_STATE_CHECKED) ? 1 : 0);
 	setDccTurnout(tidx, val);
+}
+
+
+// 
+// A new loco is selected from dropdown menu. 
+// Associate the loco with throttle slider
+void setThrottleLoco(lv_event_t * e)
+{
+	lv_obj_t* dropdown = lv_event_get_current_target(e);
+	int thr_idx = -1;
+	if 			(dropdown == ui_LocoName0) { thr_idx = 0; }
+	else if (dropdown == ui_LocoName1) { thr_idx = 1; }
+	else if (dropdown == ui_LocoName2) { thr_idx = 2; }
+	if (thr_idx < 0) return;
+
+	int loco_idx = lv_dropdown_get_selected(dropdown);
+	assignLocoToThrottle(thr_idx, loco_idx);
+}
+
+void powerOff(lv_event_t * e)
+{
+	gotoSleep();
 }

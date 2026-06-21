@@ -141,8 +141,6 @@ void setup()
       sendI2CCommand(I2C_ADDR_BACKLIGHT, 250);    // 250 : Activate touch screen
       pinMode(1, OUTPUT);
       digitalWrite(1, LOW);
-      //ioex.output(2, TCA9534::Level::L);
-      //ioex.output(2, TCA9534::Level::H);
       delay(120);
       pinMode(1, INPUT);
 
@@ -160,6 +158,7 @@ void setup()
   gfx.initDMA();
   gfx.startWrite();
   gfx.fillScreen(TFT_BLACK);
+  gfx.setFont(&fonts::Font4);
 
   lv_init();
   size_t buffer_size = sizeof(lv_color_t) * LCD_H_RES * LCD_V_RES;
@@ -192,27 +191,33 @@ void setup()
   // Initialize wifi 
   //----------------------------------------------------
   dx = 100;
-  dy = 200;
+  dy = 100;
+
+  snprintf(dbgStr, sizeof(dbgStr), "Connecting to wifi with SSID: %s....\n", ssid);
+  gfx.drawString(dbgStr, dx, dy);
+  dy += 20;
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED)
     delay(1000);
   snprintf(dbgStr, sizeof(dbgStr), "Connected with SSID: %s\n", ssid);
   gfx.drawString(dbgStr, dx, dy);
+  dy += 20;
   DEBUG_PRINTF(dbgStr);
 
  //----------------------------------------------------
   // Initialize dcc-ex protocol 
   //----------------------------------------------------
-  dy += 20;
   gfx.drawString("Connecting to DCC-EX server...", dx, dy);
+  dy += 20;
 
   if (!client.connect(serverAddress, serverPort)) {
     DEBUG_PRINTF("connection failed");
     while (1)
       delay(1000);
   }
-  dy += 20;
   gfx.drawString("Connected to DCC-EX server", dx, dy);
+  dy += 20;
+
 #if _DEBUG_
   dccexProtocol.setLogStream(&Serial);
 #endif
@@ -231,6 +236,14 @@ void setup()
   // request loco roster list and turnout lists
   dccexProtocol.sendCommand("<J T>") ;
   dccexProtocol.getLists(true, true, false, false);
+
+  // wait till we get the lists
+  gfx.drawString("Waiting for roster/turnout lists from DCC-ex....", dx, dy);
+  dy += 20;
+
+  while (!dccexProtocol.receivedLists()) {
+      delay(100);
+  }
 
   //----------------------------------------------------
   // lv_demo_widgets();// Main UI interface

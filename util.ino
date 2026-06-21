@@ -42,10 +42,24 @@ void updateTrackPower(TrackPower trk_pwr)
 
 void updateRoster()
 {
+  // update the loco list on dropdown menu 
+  int loco_idx = 0;
   for (Loco *loco = dccexProtocol.roster->getFirst(); loco; loco = loco->getNext()) {
     int locoAddr = loco->getAddress();
     const char *name = loco->getName();
     DEBUG_PRINTF("Roster Loco %d: %s\n", locoAddr, name);
+    
+    for (int thr_idx=0; thr_idx < NUM_THROTTLES; ++thr_idx) {
+      setLocoList(thr_idx, loco_idx, name, locoAddr);
+    }
+    loco_idx++;
+  }
+
+  // assign one loco from the list to each throttle
+  loco_idx = 0;
+  for (Loco *loco = dccexProtocol.roster->getFirst(); loco; loco = loco->getNext()) {
+    int locoAddr = loco->getAddress();
+    const char *name = loco->getName();
 
     // check if the loco address is previously stored in the preferences
     uint32_t tidx = myPrefs.getUInt(name, 0);
@@ -63,8 +77,24 @@ void updateRoster()
       }
     }
     DEBUG_PRINTF("Throttle[%d] -> loco %d\n", tidx, locoAddr);
-    setLocoName(tidx, name);
+    selectLoco(tidx, loco_idx);
+    loco_idx++;
   }
+}
+
+void assignLocoToThrottle(int thr_idx, int loco_idx)
+{
+  if (thr_idx >= NUM_THROTTLES || loco_idx >= dccexProtocol.getRosterCount())
+    return;
+
+  Loco* locop = nullptr;
+  int lidx = 0;
+  for (locop = dccexProtocol.roster->getFirst(); locop; locop = locop->getNext()) {
+      if (lidx == loco_idx) break;
+      lidx++;
+  }
+  DEBUG_PRINTF("Setting new loco 0x%x, for throttle %d\n", thr_idx, locop);
+  locoList[thr_idx] = locop;
 }
 
 //----------------------------------------------------------------------------
@@ -136,3 +166,19 @@ void setDccTurnout(int turn_idx, int val)
     dccexProtocol.sendCommand(cmdStr);
   }
 }
+
+//----------------------------------------------------------------------------
+// Turn off esp32 and put it to sleep.
+// Set all DCC throttles to 0 to stop all trains
+//----------------------------------------------------------------------------
+
+void gotoSleep()
+{
+  DEBUG_PRINTF("Going to Sleep.. zzzz..");
+  for (int thr_idx=0; thr_idx < NUM_THROTTLES; ++thr_idx) {
+    setDccLocoSpeed(thr_idx, 0, Direction::Forward);
+  }
+
+  esp_deep_sleep_start();
+}
+

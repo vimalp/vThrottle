@@ -36,6 +36,10 @@ extern "C" {
 extern void setDccLocoSpeed(int thr_idx, int speed_val, int dir);
 extern void setDccHorn(int thr_idx, int val);
 extern void setDccTurnout(int turnout_idx, int val);
+extern void setLocoList(int thr_idx, int loco_idx, const char* name, uint32_t addr);
+extern void selectLoco(int thr_idx, int loco_idx);
+extern void assignLocoToThrottle(int thr_idx, int loco_idx);
+extern void gotoSleep();
 
 #ifdef __cplusplus
 }
