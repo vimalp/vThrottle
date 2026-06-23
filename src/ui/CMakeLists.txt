@@ -1,4 +1,6 @@
-SET(SOURCES ui_Home.c
+SET(SOURCES ui_comp_thrcomp.c
+    ui_comp.c
+    ui_Home.c
     ui.c
     ui_comp_hook.c
     ui_helpers.c

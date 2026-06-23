@@ -58,3 +58,15 @@ def setThrottleLoco(event_struct):
 def resetEsp(event_struct):
     return
 
+
+def setLocoReverse(event_struct):
+    return
+
+
+def setThrottoleLoco(event_struct):
+    return
+
+
+def setLocoReveerse(event_struct):
+    return
+

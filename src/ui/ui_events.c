@@ -7,6 +7,37 @@
 #include <Arduino.h>
 #include "my_turnout.h"
 
+static char dbgStr[40];
+
+//------------------------------------------------------------
+// get dropdown menu widget for given throttle
+//------------------------------------------------------------
+
+lv_obj_t*	getLocNameDropdown(int thr_idx)
+{
+	lv_obj_t*	  comp = NULL;
+		
+	switch (thr_idx) {
+		case 0: comp = ui_ThrComp0; break;
+		case 1: comp = ui_ThrComp1; break;
+		case 2: comp = ui_ThrComp2; break;
+		default: break;
+	}
+	if (!comp) return NULL;
+	return ui_comp_get_child(comp, UI_COMP_THRCOMP_LOCONAME);
+}
+
+
+int getThrottleIdx(lv_obj_t *target)
+{
+  lv_obj_t* comp = lv_obj_get_parent(target);
+
+	int thr_idx = -1;
+	if 			(comp == ui_ThrComp0) { thr_idx = 0; }
+	else if (comp == ui_ThrComp1) { thr_idx = 1; }
+	else if (comp == ui_ThrComp2) { thr_idx = 2; }
+	return thr_idx;
+}
 
 //------------------------------------------------------------
 // Sets loco names dropdown menus with loco address and names
@@ -15,31 +46,17 @@
 //-------------------------------------------------------------
 void clearLocoList(int thr_idx) 
 {
-	lv_obj_t*		dropdown = NULL;
-		
-	switch (thr_idx) {
-		case 0: dropdown = ui_LocoName0; break;
-		case 1: dropdown = ui_LocoName1; break;
-		case 2: dropdown = ui_LocoName2; break;
-		default: break;
-	}
+	lv_obj_t* dropdown = getLocNameDropdown(thr_idx);
 	if (!dropdown) return;
-
 	lv_dropdown_clear_options(dropdown);
 }
 
 
 void setLocoList(int thr_idx, int loco_idx, const char* name, uint32_t addr) 
 {
-	lv_obj_t*		dropdown = NULL;
 	char			  optStr[40];
 
-	switch (thr_idx) {
-		case 0: dropdown = ui_LocoName0; break;
-		case 1: dropdown = ui_LocoName1; break;
-		case 2: dropdown = ui_LocoName2; break;
-		default: break;
-	}
+	lv_obj_t* dropdown = getLocNameDropdown(thr_idx);
 	if (!dropdown) return;
 
 	snprintf(optStr, sizeof(optStr), "%d: %s", addr, name);
@@ -54,15 +71,7 @@ void setLocoList(int thr_idx, int loco_idx, const char* name, uint32_t addr)
 
 void selectLoco(int thr_idx, int loco_idx)
 {
-	lv_obj_t*		dropdown = NULL;
-	char			  dbgStr[40];
-
-	switch (thr_idx) {
-		case 0: dropdown = ui_LocoName0; break;
-		case 1: dropdown = ui_LocoName1; break;
-		case 2: dropdown = ui_LocoName2; break;
-		default: break;
-	}
+	lv_obj_t* dropdown = getLocNameDropdown(thr_idx);
 	if (!dropdown) return;
 
 	snprintf(dbgStr, sizeof(dbgStr), "Select Loco: throttle=%d, locoIdx=%d\n", thr_idx, loco_idx);
@@ -78,13 +87,9 @@ void selectLoco(int thr_idx, int loco_idx)
 void setThrottleLoco(lv_event_t * e)
 {
 	char		locoStr[40];
-	char		dbgStr[40];
-	lv_obj_t* dropdown = lv_event_get_current_target(e);
 
-	int thr_idx = -1;
-	if 			(dropdown == ui_LocoName0) { thr_idx = 0; }
-	else if (dropdown == ui_LocoName1) { thr_idx = 1; }
-	else if (dropdown == ui_LocoName2) { thr_idx = 2; }
+	lv_obj_t* dropdown = lv_event_get_current_target(e);
+	int thr_idx = getThrottleIdx(dropdown);
 	if (thr_idx < 0) return;
 
 	int loco_idx = lv_dropdown_get_selected(dropdown);
@@ -101,59 +106,53 @@ void setThrottleLoco(lv_event_t * e)
 void setLocoSpeed(lv_event_t * e)
 {
 	lv_obj_t* slider = lv_event_get_current_target(e);
-	lv_obj_t* dirBtn = NULL;
+	lv_obj_t* comp = lv_obj_get_parent(slider);
+
+	lv_obj_t* dirBtn = ui_comp_get_child(comp, UI_COMP_THRCOMP_LOCOREV);;
 	int32_t speedVal = lv_slider_get_value(slider);
 	
-	int	lidx = -1;
-	if 			(slider == ui_LocoThr0)	{ lidx = 0;	dirBtn = ui_LocoRev0; }
-	else if (slider == ui_LocoThr1)	{ lidx = 1;	dirBtn = ui_LocoRev1; }
-	else if (slider == ui_LocoThr2)	{ lidx = 2;	dirBtn = ui_LocoRev2; }
-
-	if (lidx < 0) return;
+	int thr_idx = getThrottleIdx(slider);
+	if (thr_idx < 0) return;
 
 	int32_t dir = (lv_obj_has_state(dirBtn, LV_STATE_CHECKED) ? 1 : 0);
-	setDccLocoSpeed(lidx, speedVal, dir);
+	setDccLocoSpeed(thr_idx, speedVal, dir);
 }
 
 //------------------------------------------------------------
 // set locomotive direction
 //------------------------------------------------------------
 
-void setLocReverse(lv_event_t * e)
+void setLocoReverse(lv_event_t * e)
 {
 	lv_obj_t* dirBtn = lv_event_get_current_target(e);
-	lv_obj_t* slider = NULL;
-	
-	int	lidx = -1;
-	if 			(slider == ui_LocoRev0)	{ lidx = 0;	slider = ui_LocoThr0; }
-	else if (slider == ui_LocoRev1)	{ lidx = 1;	slider = ui_LocoThr1; }
-	else if (slider == ui_LocoRev2)	{ lidx = 2;	slider = ui_LocoThr2; }
-	if (lidx < 0) return;
+	lv_obj_t* comp = lv_obj_get_parent(dirBtn);
+	lv_obj_t* slider = ui_comp_get_child(comp, UI_COMP_THRCOMP_LOCOTHR);;
+
+	int thr_idx = getThrottleIdx(dirBtn);
+	if (thr_idx < 0) return;
 
 	int32_t speedVal = lv_slider_get_value(slider);
 	int32_t dir = (lv_obj_has_state(dirBtn, LV_STATE_CHECKED) ? 1 : 0);
-	setDccLocoSpeed(lidx, speedVal, dir);
+	setDccLocoSpeed(thr_idx, speedVal, dir);
 }
 
 
 void setLocoHorn(lv_event_t * e)
 {
 	lv_obj_t* hornBtn = lv_event_get_current_target(e);
-	char		  dbgStr[40];
 
-	int	lidx = -1;
-	if 			(hornBtn == ui_horn0)	{ lidx = 0; }
-	else if (hornBtn == ui_horn1)	{ lidx = 1; }
-	else if (hornBtn == ui_horn2)	{ lidx = 2; }
-	if (lidx < 0) return;
+	int thr_idx = getThrottleIdx(hornBtn);
+	if (thr_idx < 0) return;
 
-	bool btnPressed = lv_obj_has_state(hornBtn, LV_STATE_PRESSED);
-	bool btnChecked = lv_obj_has_state(hornBtn, LV_STATE_CHECKED);
-	snprintf(dbgStr, sizeof(dbgStr), "setLocoHorn: pressed=%d, checked=%d\n", btnPressed, btnChecked);
+	lv_state_t btnState = lv_obj_get_state(hornBtn);
+	bool btnChecked = (btnState == LV_STATE_CHECKED) || (btnState == LV_STATE_PRESSED);
+
+
+	snprintf(dbgStr, sizeof(dbgStr), "setLocoHorn: pressed=%d\n", btnChecked);
 	c_serial_print(dbgStr);
 
-	int32_t val = ((btnPressed || btnChecked) ? 1 : 0);
-	setDccHorn(lidx, val);
+	int32_t val = (btnChecked) ? 1 : 0;
+	setDccHorn(thr_idx, val);
 }
 
 //-----------------------------------------------------
@@ -165,13 +164,12 @@ static int curFuncBtnIdx = -1;
 // Opened the function panel. Save the index of throttle for which the function panel as opened.
 void openLocoFunc(lv_event_t * e)
 {
-		lv_obj_t*	funcBtn = lv_event_get_current_target(e);
 
-		// set curFuncBtnIdx which will be later used by 'setLocoFunc'
-		curFuncBtnIdx = -1;
-		if 			(funcBtn == ui_FuncButton0)	{ curFuncBtnIdx = 0; }
-		else if (funcBtn == ui_FuncButton1)	{ curFuncBtnIdx = 1; }
-		else if (funcBtn == ui_FuncButton2)	{ curFuncBtnIdx = 2; }
+	lv_obj_t*	funcOpenBtn = lv_event_get_current_target(e);
+	// set curFuncBtnIdx which will be later used by 'setLocoFunc'
+	curFuncBtnIdx = getThrottleIdx(funcOpenBtn);
+	snprintf(dbgStr, sizeof(dbgStr), "OpenFuncPanel: thrIdx=%d\n", curFuncBtnIdx);
+	c_serial_print(dbgStr);
 }
 
 void setLocoFunc(lv_event_t * e)
@@ -184,6 +182,9 @@ void setLocoFunc(lv_event_t * e)
 	else if (funcBtn == ui_FlangeF7)	{ func_num = 7; }
 	else if (funcBtn == ui_MasterSoundF8)	{ func_num = 8; }
 	else if (funcBtn == ui_RadiatorF11)	{ func_num = 11; }
+
+	snprintf(dbgStr, sizeof(dbgStr), "selectFunc: thrIdx=%d, func=%d\n", curFuncBtnIdx, func_num);
+	c_serial_print(dbgStr);
 
 	if (curFuncBtnIdx < 0 || func_num < 0)
 		return;
