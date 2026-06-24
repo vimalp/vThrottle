@@ -23,12 +23,12 @@ class MyDelegate : public DCCEXProtocolDelegate
     }
 
     void receivedRosterList() override {
-      DEBUG_PRINTF("\nReceived Roster");
+      DEBUG_PRINTF("\nReceived Roster\n");
       updateRoster();
     }
 
     void receivedTurnoutList() override {
-      DEBUG_PRINTF("\nReceived Turnout List");
+      DEBUG_PRINTF("\nReceived Turnout List\n");
       updateTurnouts();
     }
 

@@ -16,7 +16,6 @@
 
 #include <DCCEXProtocol.h>
 #include <WiFi.h>
-#include <Preferences.h>
 #include "my_turnout.h"
 
 
@@ -31,7 +30,6 @@
 #define I2C_ADDR_TOUCHPAD   0x5D
 
 extern DCCEXProtocol  dccexProtocol;
-extern Preferences    myPrefs;
 
 //-----------------------------------------
 //-----------------------------------------
@@ -42,12 +40,7 @@ extern Loco*    locoList[NUM_THROTTLES];
 //-----------------------------------------
 //-----------------------------------------
 
-typedef struct {
-  uint32_t    dccId;
-  Turnout*    turnoutp;
-} Turnout_t;
-
-extern Turnout_t   turnoutList[NUM_TURNOUTS];
+extern Turnout*   turnoutList[NUM_TURNOUTS];
 
 //-----------------------------------------
 // DCC Loco functions

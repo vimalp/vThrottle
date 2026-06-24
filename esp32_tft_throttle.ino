@@ -37,16 +37,9 @@ uint16_t touch_x, touch_y;
 
 WiFiClient    client;
 DCCEXProtocol dccexProtocol;
-Preferences   myPrefs;
 MyDelegate    dccexDelegate;
 Loco*         locoList[NUM_THROTTLES] = { nullptr, nullptr, nullptr};
-Turnout_t     turnoutList[NUM_TURNOUTS] = { 
-  {0,  nullptr}, 
-  {0,  nullptr}, 
-  {0,  nullptr}, 
-  {0,  nullptr}, 
-  {0,  nullptr}
-};
+Turnout*      turnoutList[NUM_TURNOUTS] = { nullptr, nullptr, nullptr, nullptr, nullptr};
 
 //--------------------------------------------------------
 // wifi config
@@ -227,37 +220,45 @@ void setup()
   // Pass the communication to wiThrottleProtocol
   dccexProtocol.connect(&client);
   dccexProtocol.setDelegate(&dccexDelegate);
+  dccexProtocol.setDebug(_DEBUG_ ? true : false);
   DEBUG_PRINTF("DCC-EX connected");
 
-  // open preferences 
-  myPrefs.begin("dccex-multi-throttle", false);  
-
-  dccexProtocol.setDebug(true);
-
-  // request loco roster list and turnout lists
-  dccexProtocol.sendCommand("<J T>") ;
-  dccexProtocol.getLists(true, true, false, false);
-
-  // reset the HAL (i.e. serial interface etc)
+   // reset the HAL (i.e. serial interface etc)
   dccexProtocol.sendCommand("<D HAL RESET>");
 
-  // wait till we get the lists
-  gfx.drawString("Waiting for roster/turnout lists from DCC-ex....", dx, dy);
-  dy += charHeight;
-
-#if 0
-  while (!dccexProtocol.receivedLists()) {
-      dccexProtocol.check();
-      delay(100);
-  }
-#endif
 
   //----------------------------------------------------
   // lv_demo_widgets();// Main UI interface
   ui_init();
 
+  init_dcc_lists();
+
   Serial.println( "Setup done" );
 }
+
+
+//--------------------------------------------------------
+// initialize roster and turnout lists
+// update the ui widgets for loco names
+//--------------------------------------------------------
+
+void init_dcc_lists() 
+{
+  while (!dccexProtocol.receivedLists()) {
+     // request loco roster list and turnout lists
+    dccexProtocol.getLists(true, true, false, false);
+    dccexProtocol.check();
+    delay(10);
+  }
+  
+  // reset all turnouts to closed position
+  for (int tidx=0; tidx < NUM_TURNOUTS; ++tidx) {
+    setDccTurnout(tidx, 0);
+  }
+}
+
+//--------------------------------------------------------
+//--------------------------------------------------------
 
 void loop()
 {

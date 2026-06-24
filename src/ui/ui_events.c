@@ -7,13 +7,13 @@
 #include <Arduino.h>
 #include "my_turnout.h"
 
-static char dbgStr[40];
+static char dbgStr[80];
 
 //------------------------------------------------------------
 // get dropdown menu widget for given throttle
 //------------------------------------------------------------
 
-lv_obj_t*	getLocNameDropdown(int thr_idx)
+lv_obj_t*	getLocoNameDropdown(int thr_idx)
 {
 	lv_obj_t*	  comp = NULL;
 		
@@ -46,7 +46,7 @@ int getThrottleIdx(lv_obj_t *target)
 //-------------------------------------------------------------
 void clearLocoList(int thr_idx) 
 {
-	lv_obj_t* dropdown = getLocNameDropdown(thr_idx);
+	lv_obj_t* dropdown = getLocoNameDropdown(thr_idx);
 	if (!dropdown) return;
 	lv_dropdown_clear_options(dropdown);
 }
@@ -54,14 +54,12 @@ void clearLocoList(int thr_idx)
 
 void setLocoList(int thr_idx, int loco_idx, const char* name, uint32_t addr) 
 {
-	char			  optStr[40];
-
-	lv_obj_t* dropdown = getLocNameDropdown(thr_idx);
+	lv_obj_t* dropdown = getLocoNameDropdown(thr_idx);
 	if (!dropdown) return;
 
-	snprintf(optStr, sizeof(optStr), "%d: %s", addr, name);
-	c_serial_print(optStr);
-	lv_dropdown_add_option(dropdown, optStr, loco_idx);
+	snprintf(dbgStr, sizeof(dbgStr), "%d: %s", addr, name);
+	c_serial_print(dbgStr);
+	lv_dropdown_add_option(dropdown, dbgStr, loco_idx);
 }
 
 //------------------------------------------------------------
@@ -71,7 +69,7 @@ void setLocoList(int thr_idx, int loco_idx, const char* name, uint32_t addr)
 
 void selectLoco(int thr_idx, int loco_idx)
 {
-	lv_obj_t* dropdown = getLocNameDropdown(thr_idx);
+	lv_obj_t* dropdown = getLocoNameDropdown(thr_idx);
 	if (!dropdown) return;
 
 	snprintf(dbgStr, sizeof(dbgStr), "Select Loco: throttle=%d, locoIdx=%d\n", thr_idx, loco_idx);

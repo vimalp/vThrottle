@@ -99,22 +99,13 @@ void updateRoster()
     int locoAddr = loco->getAddress();
     const char *name = loco->getName();
 
-    // check if the loco address is previously stored in the preferences
-    uint32_t tidx = myPrefs.getUInt(name, 0);
-    if (tidx > 0 && tidx < NUM_THROTTLES) {
-      locoList[tidx] = loco; 
-    }
-    else {
-      // assign an empty throttle slot to the loco
-      tidx = 0;
-      for (; tidx < NUM_THROTTLES; ++tidx) {
-        if (!locoList[tidx]) break;
-      }
-      if (tidx < NUM_THROTTLES) {
-        locoList[tidx] = loco;
-      }
+    // assign an empty throttle slot to the loco
+    int tidx = 0;
+    for (; tidx < NUM_THROTTLES; ++tidx) {
+      if (!locoList[tidx]) break;
     }
     if (tidx < NUM_THROTTLES) {
+      locoList[tidx] = loco;
       DEBUG_PRINTF("Throttle[%d] -> loco %d\n", tidx, locoAddr);
       selectLoco(tidx, loco_idx);
     }
@@ -159,11 +150,11 @@ void updateTurnouts()
   for (Turnout *tout = dccexProtocol.turnouts->getFirst(); tout; tout = tout->getNext()) {
     int tid = tout->getId();
     switch (tid) {
-      case DCC_TL0: { turnoutList[TURNOUT_TL0].dccId = DCC_TL0; turnoutList[TURNOUT_TL0].turnoutp = tout; }  break;
-      case DCC_TR0: { turnoutList[TURNOUT_TR0].dccId = DCC_TR0; turnoutList[TURNOUT_TR0].turnoutp = tout; }  break;
-      case DCC_TL2: { turnoutList[TURNOUT_TL2].dccId = DCC_TL2; turnoutList[TURNOUT_TL2].turnoutp = tout; }  break;
-      case DCC_TR2: { turnoutList[TURNOUT_TR2].dccId = DCC_TR2; turnoutList[TURNOUT_TR2].turnoutp = tout; }  break;
-      case DCC_XC:  { turnoutList[TURNOUT_XC].dccId = DCC_XC; turnoutList[TURNOUT_XC].turnoutp = tout;  }break;
+      case DCC_TL0: { turnoutList[TURNOUT_TL0] = tout; }  break;
+      case DCC_TR0: { turnoutList[TURNOUT_TR0] = tout; }  break;
+      case DCC_TL2: { turnoutList[TURNOUT_TL2] = tout; }  break;
+      case DCC_TR2: { turnoutList[TURNOUT_TR2] = tout; }  break;
+      case DCC_XC:  { turnoutList[TURNOUT_XC] = tout;  }  break;
       default:
         Serial.printf("Error: Received unknown turnout -> %d\n", tid);
         break;
@@ -206,9 +197,15 @@ void setDccFunc(int thr_idx, int func_num, int val)
 void setDccTurnout(int turn_idx, int val)
 {
   char  cmdStr[20];
-  if (turn_idx >= 0 && turn_idx < NUM_TURNOUTS && turnoutList[turn_idx].turnoutp) {
-    snprintf(cmdStr, sizeof(cmdStr), "<T %d %d>", turnoutList[turn_idx].dccId, val);
+  if (turn_idx >= 0 && turn_idx < NUM_TURNOUTS && turnoutList[turn_idx]) {
+#if 0
+    snprintf(cmdStr, sizeof(cmdStr), "<T %d %d>", turnoutList[turn_idx]->getId(), val);
     dccexProtocol.sendCommand(cmdStr);
+#endif
+    if (val) 
+      dccexProtocol.throwTurnout(turnoutList[turn_idx]->getId());
+    else
+      dccexProtocol.closeTurnout(turnoutList[turn_idx]->getId());
   }
 }
 
