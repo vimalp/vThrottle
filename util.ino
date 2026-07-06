@@ -238,6 +238,8 @@ void gotoSleep()
         break;
     }
   }
+  // Turn off backlight
+  sendI2CCommand(I2C_ADDR_BACKLIGHT, 245);  // 0 is the brightest backlight.    / 245 backlight off   
 
   //esp_sleep_enable_ext0_wakeup(TOUCH_GT911_INT, LOW);
   esp_deep_sleep_start();

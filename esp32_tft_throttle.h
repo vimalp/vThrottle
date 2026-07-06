@@ -54,3 +54,4 @@ extern void updateRoster();
 extern void getAvailLocoAddresses(uint32_t& num_avail, uint32_t* avail_loco_addresses);
 extern void updateTurnouts();
 extern void show_wifi_status();
+extern void sendI2CCommand(uint8_t addr, uint8_t command);
