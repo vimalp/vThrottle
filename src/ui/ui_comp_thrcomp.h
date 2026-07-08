@@ -24,6 +24,9 @@ extern "C" {
 #define _UI_COMP_THRCOMP_NUM 8
 lv_obj_t *ui_ThrComp_create(lv_obj_t *comp_parent);
 void ui_event_comp_ThrComp_LocoThr( lv_event_t * e);
+void ui_event_comp_ThrComp_LocoName( lv_event_t * e);
+void ui_event_comp_ThrComp_LocoRev( lv_event_t * e);
+void ui_event_comp_ThrComp_horn( lv_event_t * e);
 void ui_event_comp_ThrComp_FuncButton( lv_event_t * e);
 
 #ifdef __cplusplus

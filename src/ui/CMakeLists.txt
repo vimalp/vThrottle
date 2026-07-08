@@ -1,10 +1,12 @@
 SET(SOURCES ui_comp_thrcomp.c
     ui_comp.c
+    ui_Startup.c
     ui_Home.c
     ui.c
     ui_comp_hook.c
     ui_helpers.c
     ui_events.c
+    ui_img_power_btn_png.c
     ui_img_vthrottle_logo_png.c
     ui_img_turnout_xc_png.c
     ui_img_tunrout_xc1_png.c
@@ -19,6 +21,7 @@ SET(SOURCES ui_comp_thrcomp.c
     ui_img_horn_png.c
     ui_img_sound_wave_png.c
     ui_img_sound_off_png.c
-    ui_img_sound_png.c)
+    ui_img_sound_png.c
+    ui_img_dccex_logo_png.c)
 
 add_library(ui ${SOURCES})

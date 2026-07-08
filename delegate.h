@@ -32,4 +32,8 @@ class MyDelegate : public DCCEXProtocolDelegate
       updateTurnouts();
     }
 
+    void receivedMessage(const char *message) {
+      DEBUG_PRINTF("Received Message: %s\n", message);
+    }
+
 };

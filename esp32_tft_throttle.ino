@@ -115,8 +115,6 @@ void sendI2CCommand(uint8_t addr, uint8_t command) {
 void setup()
 {
   char    dbgStr[80];
-  uint8_t dx, dy;
-  const uint32_t charHeight = 30;     // for font4
 
   Serial.begin(115200); 
 
@@ -182,35 +180,39 @@ void setup()
   gfx.fillScreen(TFT_BLACK);
 
   //----------------------------------------------------
+  // lv_demo_widgets();// Main UI interface
+  ui_init();
+  DEBUG_PRINTF("Init UI\n");
+  lv_timer_handler(); /* let the GUI do its work */
+
+  //----------------------------------------------------
   // Initialize wifi 
   //----------------------------------------------------
-  dx = 100;
-  dy = 100;
-
   snprintf(dbgStr, sizeof(dbgStr), "Connecting to wifi with SSID: %s....\n", ssid);
-  gfx.drawString(dbgStr, dx, dy);
-  dy += charHeight;
+  display_dbg_msg(dbgStr);
+
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED)
-    delay(1000);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(10);
+    lv_timer_handler();     // call this in order to handle events in ui
+  }
   snprintf(dbgStr, sizeof(dbgStr), "Connected with SSID: %s\n", ssid);
-  gfx.drawString(dbgStr, dx, dy);
-  dy += charHeight;
+  display_dbg_msg(dbgStr);
   DEBUG_PRINTF(dbgStr);
 
  //----------------------------------------------------
   // Initialize dcc-ex protocol 
   //----------------------------------------------------
-  gfx.drawString("Connecting to DCC-EX server...", dx, dy);
-  dy += charHeight;
+  display_dbg_msg("Connecting to DCC-EX server...\n");
 
   if (!client.connect(serverAddress, serverPort)) {
     DEBUG_PRINTF("connection failed");
-    while (1)
-      delay(1000);
+    while (1) {
+      delay(10);    
+      lv_timer_handler();     // call this in order to handle events in ui
+    }
   }
-  gfx.drawString("Connected to DCC-EX server", dx, dy);
-  dy += charHeight;
+  display_dbg_msg("Connected to DCC-EX server\n");
 
 #if _DEBUG_
   dccexProtocol.setLogStream(&Serial);
@@ -224,14 +226,13 @@ void setup()
   DEBUG_PRINTF("DCC-EX connected");
 
    // reset the HAL (i.e. serial interface etc)
-  dccexProtocol.sendCommand("<D HAL RESET>");
-
-
-  //----------------------------------------------------
-  // lv_demo_widgets();// Main UI interface
-  ui_init();
+  dccexProtocol.sendCommand("D HAL RESET");
+  delay(100);
 
   init_dcc_lists();
+ 
+  // load main ui screen
+  lv_scr_load_anim(ui_Home, LV_SCR_LOAD_ANIM_MOVE_LEFT, 500, 0, false);
 
   Serial.println( "Setup done" );
 }
@@ -250,10 +251,17 @@ void init_dcc_lists()
     dccexProtocol.check();
     delay(10);
   }
-  
+
   // reset all turnouts to closed position
   for (int tidx=0; tidx < NUM_TURNOUTS; ++tidx) {
     setDccTurnout(tidx, 0);
+    delay(100);
+  }
+
+  // set initial state of all signal heads
+  for (int sidx = 0; sidx < NUM_SIGNAL_HEADS; ++sidx) {
+    setDccSignal(sidx, signalHeads[sidx].aspect);
+    delay(100);
   }
 }
 

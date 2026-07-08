@@ -70,3 +70,19 @@ def setThrottoleLoco(event_struct):
 def setLocoReveerse(event_struct):
     return
 
+
+def setSignalHead(event_struct):
+    return
+
+
+def openDccCmd(event_struct):
+    return
+
+
+def sendDccExCmd(event_struct):
+    return
+
+
+def getKeyboardText(event_struct):
+    return
+

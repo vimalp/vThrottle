@@ -5,7 +5,7 @@
 
 #include "ui.h"
 #include <Arduino.h>
-#include "my_turnout.h"
+#include "dcc_funcs.h"
 
 static char dbgStr[80];
 
@@ -143,13 +143,11 @@ void setLocoHorn(lv_event_t * e)
 	if (thr_idx < 0) return;
 
 	lv_state_t btnState = lv_obj_get_state(hornBtn);
-	bool btnChecked = (btnState == LV_STATE_CHECKED) || (btnState == LV_STATE_PRESSED);
+	int8_t val = lv_obj_has_state(hornBtn, LV_STATE_PRESSED) ? 1 : 0;
 
-
-	snprintf(dbgStr, sizeof(dbgStr), "setLocoHorn: pressed=%d\n", btnChecked);
+	snprintf(dbgStr, sizeof(dbgStr), "setLocoHorn: state=%d, pressed=%d\n", btnState, val);
 	c_serial_print(dbgStr);
 
-	int32_t val = (btnChecked) ? 1 : 0;
 	setDccHorn(thr_idx, val);
 }
 
@@ -168,6 +166,34 @@ void openLocoFunc(lv_event_t * e)
 	curFuncBtnIdx = getThrottleIdx(funcOpenBtn);
 	snprintf(dbgStr, sizeof(dbgStr), "OpenFuncPanel: thrIdx=%d\n", curFuncBtnIdx);
 	c_serial_print(dbgStr);
+
+	// change the background of func panel based on throttle index
+	lv_color_t bg_color = lv_obj_get_style_bg_color(funcOpenBtn, LV_PART_MAIN);
+	lv_obj_set_style_bg_color(ui_funcPanel, bg_color, LV_PART_MAIN | LV_STATE_DEFAULT );
+
+	// set values of checkable function buttons
+	// currently only the headlight and sound functions are modal and set
+	if (curFuncVals[curFuncBtnIdx][0]) {
+		lv_obj_add_state(ui_HeadLightF0, LV_STATE_CHECKED);
+	}
+	else {
+		lv_obj_add_state(ui_HeadLightF0, LV_STATE_DEFAULT);
+	}
+
+	if (curFuncVals[curFuncBtnIdx][8]) {
+		c_serial_print("   Function 8: Button pressed\n");
+
+		lv_obj_add_state(ui_MasterSoundF8, LV_STATE_CHECKED);
+		lv_imgbtn_set_src(ui_MasterSoundF8, LV_IMGBTN_STATE_PRESSED, NULL, &ui_img_sound_png, NULL);
+	}
+	else {
+		c_serial_print("   Function 8: Button released\n");
+
+		lv_obj_add_state(ui_MasterSoundF8, LV_STATE_DEFAULT);
+		lv_imgbtn_set_src(ui_MasterSoundF8, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_sound_off_png, NULL);
+	}
+	lv_obj_invalidate(ui_MasterSoundF8); 
+
 }
 
 void setLocoFunc(lv_event_t * e)
@@ -225,12 +251,56 @@ void setTurnOut(lv_event_t * e)
 }
 
 
+//-------------------------------------------------------------
+// This function is called by the logic that calculates the signal
+// aspect. 
+//-------------------------------------------------------------
+
+void setSignalAspect(uint8_t signal_idx, uint8_t aspect_val)
+{
+	lv_obj_t* signalObj = NULL;
+
+	switch (signal_idx) {
+		case SIGNAL_SHL0C:	signalObj = ui_SHL0C;		break;
+		case SIGNAL_SHL1TC:	signalObj = ui_SHL1TC;		break;
+		case SIGNAL_SHL1TD:	signalObj = ui_SHL1TD;		break;
+		case SIGNAL_SHL2C:	signalObj = ui_SHL2C;		break;
+		case SIGNAL_SHL2D:	signalObj = ui_SHL2D;		break;
+		case SIGNAL_SHR0TC:	signalObj = ui_SHR0TC;		break;
+		case SIGNAL_SHR0TD:	signalObj = ui_SHR0TD;		break;
+		case SIGNAL_SHR1C:	signalObj = ui_SHR1C;		break;
+		case SIGNAL_SHR2TC:	signalObj = ui_SHR2TC;		break;
+		case SIGNAL_SHR2TD:	signalObj = ui_SHR2TD;		break;
+		default:		break;
+	}
+	if (!signalObj) return;
+
+  lv_color_t aspect_color = lv_color_hex(AspectCols[aspect_val]);
+  lv_obj_set_style_bg_color(signalObj, aspect_color, LV_PART_MAIN);
+}
+
+//---------------------------------------------------------
+// The keyboard input is used for sending raw commands to
+// DCC-EX command station
+//---------------------------------------------------------
+void getKeyboardText(lv_event_t * e)
+{
+	lv_obj_t * kb = lv_event_get_target(e); 
+	lv_obj_t * ta = lv_keyboard_get_textarea(kb); 
+	
+	if(ta != NULL) {
+		const char * text_input = lv_textarea_get_text(ta); 
+		sendDccExCmd(text_input);
+	}
+}
+
+
+
 void powerOff(lv_event_t * e)
 {
 	gotoSleep();
 }
 
-void resetEsp(lv_event_t * e)
-{
-	reset();
-}
+
+
+

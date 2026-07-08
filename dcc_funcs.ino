@@ -1,7 +1,7 @@
 // 
 // **************************************************************************
 //
-// util.ino
+// dcc_funcs.ino
 //
 // misc utility functions for dccex_throttle
 //
@@ -12,6 +12,49 @@
 // **************************************************************************
 //
 #include "esp32_tft_throttle.h"
+
+//------------------------------------------------------------------
+// Current value of all loco functions. 
+// Used for setting correct values in Func Panel
+//------------------------------------------------------------------
+
+uint8_t curFuncVals[NUM_THROTTLES][MAX_NUM_FUNCS] = {
+  { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+  { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+  { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+};
+
+//------------------------------------------------------------------
+// Signal head addresses and aspect values
+// Following dccaddresses are defined for signals in CommandStation's myautomatioh.h
+// Addresses must match.
+//------------------------------------------------------------------
+// aspect value indices
+#define ASPECT_DARK     0
+#define ASPECT_RED      1
+#define ASPECT_YELLOW   2
+#define ASPECT_GREEN    3
+
+signalHead_t signalHeads[NUM_SIGNAL_HEADS] = 
+{
+  {400, ASPECT_GREEN},    // DCC_SHL0C
+  {401, ASPECT_GREEN},    // DCC_SHL1TC,
+  {402, ASPECT_RED},      // DCC_SHL1TD,
+  {403, ASPECT_GREEN},    // DCC_SHL2C,
+  {404, ASPECT_RED},      // DCC_SHL2D,
+  {405, ASPECT_GREEN},    // DCC_SHR0TC,
+  {406, ASPECT_RED},      // DCC_SHR0TD,
+  {407, ASPECT_GREEN},    // DCC_SHR1C,
+  {408, ASPECT_GREEN},    // DCC_SHR2TC,
+  {409, ASPECT_RED}       // DCC_SHR2TD
+};
+
+uint32_t AspectCols[NUM_SIGNAL_ASPECTS] = {
+  0x000000,     // 0 - dark
+  0xff0000,     // 1 - Red
+  0xffff00,     // 2 - yellow
+  0x00ff00      // 3 - green
+};
 
 //------------------------------------------------------------------
 // Print function for ui_events.c
@@ -47,6 +90,18 @@ void show_wifi_status()
   lv_bar_set_value(ui_WifiLevel, signalPct, LV_ANIM_ON);
 }
 
+//------------------------------------------------------------------
+// display_dbg_msg: Print a debug message in startup screen's 
+// text area
+// Since this function is mainly called from setup(),
+// lv_timer_handler needs to be called to draw the text. 
+//------------------------------------------------------------------
+
+void display_dbg_msg(const char* msg)
+{
+  lv_textarea_add_text(ui_StartupMsgArea, msg);
+  lv_timer_handler();
+}
 //------------------------------------------------------------------
 // display track power status as LED
 //------------------------------------------------------------------
@@ -162,6 +217,7 @@ void updateTurnouts()
   }
 }
 
+
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
@@ -184,6 +240,7 @@ void setDccHorn(int thr_idx, int val)
 void setDccFunc(int thr_idx, int func_num, int val)
 {
   if (thr_idx >= 0 && thr_idx < NUM_THROTTLES && locoList[thr_idx]) {
+    curFuncVals[thr_idx][func_num] = val;
     if (val)
         dccexProtocol.functionOn(locoList[thr_idx], func_num);
       else
@@ -210,7 +267,40 @@ void setDccTurnout(int turn_idx, int val)
 }
 
 //----------------------------------------------------------------------------
-// Reset throttle and restart
+// Set signal head aspect for given signal head
+//----------------------------------------------------------------------------
+
+void setDccSignal(int signal_idx, uint8_t aspect_val)
+{
+  char    cmdStr[40];
+
+  if (signal_idx >= NUM_SIGNAL_HEADS) {
+    DEBUG_PRINTF("Got invalid signal index: %d\n", signal_idx);
+    return;
+  }
+
+  if (aspect_val >= NUM_SIGNAL_ASPECTS)
+    aspect_val = ASPECT_DARK;
+
+  signalHeads[signal_idx].aspect = aspect_val;
+
+  snprintf(cmdStr, sizeof(cmdStr), "A %d %d", signalHeads[signal_idx].dccAddr, aspect_val);
+  dccexProtocol.sendCommand(cmdStr);  
+  setSignalAspect(signal_idx, aspect_val);
+}
+
+//----------------------------------------------------------------------------
+// Send a raw command packet to DCC-EX
+//----------------------------------------------------------------------------
+
+void sendDccExCmd(const char* cmd_str)
+{
+  DEBUG_PRINTF("SendDccCmd: %s\n", cmd_str);
+  dccexProtocol.sendCommand(cmd_str);
+}
+
+//----------------------------------------------------------------------------
+// Reset throttle and restar
 //----------------------------------------------------------------------------
 
 void reset()

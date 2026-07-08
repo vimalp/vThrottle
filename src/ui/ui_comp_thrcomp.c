@@ -6,11 +6,41 @@
 #include "ui.h"
 
 void ui_event_comp_ThrComp_LocoThr( lv_event_t * e) {
-    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
+    lv_event_code_t event_code = lv_event_get_code(e);
 lv_obj_t **comp_ThrComp = lv_event_get_user_data(e);
 
 if ( event_code == LV_EVENT_VALUE_CHANGED) {
-      _ui_slider_set_text_value( comp_ThrComp[UI_COMP_THRCOMP_LOCOSPEED], target, "", "");
+      setLocoSpeed( e );
+}
+}
+
+void ui_event_comp_ThrComp_LocoName( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);
+lv_obj_t **comp_ThrComp = lv_event_get_user_data(e);
+
+if ( event_code == LV_EVENT_VALUE_CHANGED) {
+      setThrottleLoco( e );
+}
+}
+
+void ui_event_comp_ThrComp_LocoRev( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);
+lv_obj_t **comp_ThrComp = lv_event_get_user_data(e);
+
+if ( event_code == LV_EVENT_CLICKED) {
+      setLocoReverse( e );
+}
+}
+
+void ui_event_comp_ThrComp_horn( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);
+lv_obj_t **comp_ThrComp = lv_event_get_user_data(e);
+
+if ( event_code == LV_EVENT_PRESSED) {
+      setLocoHorn( e );
+}
+if ( event_code == LV_EVENT_RELEASED) {
+      setLocoHorn( e );
 }
 }
 
@@ -20,6 +50,9 @@ lv_obj_t **comp_ThrComp = lv_event_get_user_data(e);
 
 if ( event_code == LV_EVENT_CLICKED) {
       _ui_flag_modify( ui_funcPanel, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+}
+if ( event_code == LV_EVENT_CLICKED) {
+      openLocoFunc( e );
 }
 }
 
@@ -130,6 +163,7 @@ lv_obj_set_width( cui_horn, 32);
 lv_obj_set_height( cui_horn, 32);
 lv_obj_set_x( cui_horn, 0 );
 lv_obj_set_y( cui_horn, 109 );
+lv_obj_clear_flag( cui_horn, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_SNAPPABLE );    /// Flags
 
 lv_obj_t *cui_FuncButton;
 cui_FuncButton = lv_btn_create(cui_ThrComp);
@@ -168,6 +202,9 @@ children[UI_COMP_THRCOMP_FUNCBUTTON_FUNCLABEL] = cui_FuncLabel;
 lv_obj_add_event_cb(cui_ThrComp, get_component_child_event_cb, LV_EVENT_GET_COMP_CHILD, children);
 lv_obj_add_event_cb(cui_ThrComp, del_component_child_event_cb, LV_EVENT_DELETE, children);
 lv_obj_add_event_cb(cui_LocoThr, ui_event_comp_ThrComp_LocoThr, LV_EVENT_ALL, children);
+lv_obj_add_event_cb(cui_LocoName, ui_event_comp_ThrComp_LocoName, LV_EVENT_ALL, children);
+lv_obj_add_event_cb(cui_LocoRev, ui_event_comp_ThrComp_LocoRev, LV_EVENT_ALL, children);
+lv_obj_add_event_cb(cui_horn, ui_event_comp_ThrComp_horn, LV_EVENT_ALL, children);
 lv_obj_add_event_cb(cui_FuncButton, ui_event_comp_ThrComp_FuncButton, LV_EVENT_ALL, children);
 ui_comp_ThrComp_create_hook(cui_ThrComp);
 return cui_ThrComp; 

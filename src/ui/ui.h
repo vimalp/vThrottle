@@ -28,6 +28,7 @@ extern "C" {
 #include "ui_events.h"
 
 ///////////////////// SCREENS ////////////////////
+#include "ui_Startup.h"
 #include "ui_Home.h"
 
 ///////////////////// VARIABLES ////////////////////
@@ -36,6 +37,7 @@ extern "C" {
 extern lv_obj_t *ui____initial_actions0;
 
 // IMAGES AND IMAGE SETS
+LV_IMG_DECLARE( ui_img_power_btn_png);   // assets/power_btn.png
 LV_IMG_DECLARE( ui_img_vthrottle_logo_png);   // assets/vthrottle_logo.png
 LV_IMG_DECLARE( ui_img_turnout_xc_png);   // assets/turnout_xc.png
 LV_IMG_DECLARE( ui_img_tunrout_xc1_png);   // assets/tunrout_xc1.png
@@ -51,6 +53,7 @@ LV_IMG_DECLARE( ui_img_horn_png);   // assets/horn.png
 LV_IMG_DECLARE( ui_img_sound_wave_png);   // assets/sound_wave.png
 LV_IMG_DECLARE( ui_img_sound_off_png);   // assets/sound_off.png
 LV_IMG_DECLARE( ui_img_sound_png);   // assets/sound.png
+LV_IMG_DECLARE( ui_img_dccex_logo_png);   // assets/dccex_logo.png
 
 // UI INIT
 void ui_init(void);
