@@ -17,8 +17,12 @@ void setThrottleLoco(lv_event_t * e);
 void setLocoReverse(lv_event_t * e);
 void setLocoHorn(lv_event_t * e);
 void openLocoFunc(lv_event_t * e);
+void setLocoFunc0(lv_event_t * e);
+void setLocoFunc3(lv_event_t * e);
+void setLocoFunc7(lv_event_t * e);
+void setLocoFunc11(lv_event_t * e);
+void setLocoFunc8(lv_event_t * e);
 void showRoutes(lv_event_t * e);
-void setLocoFunc(lv_event_t * e);
 void getKeyboardText(lv_event_t * e);
 
 #ifdef __cplusplus

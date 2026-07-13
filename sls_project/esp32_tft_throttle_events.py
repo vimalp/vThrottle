@@ -86,3 +86,23 @@ def sendDccExCmd(event_struct):
 def getKeyboardText(event_struct):
     return
 
+
+def setLocoFunc0(event_struct):
+    return
+
+
+def setLocoFunc3(event_struct):
+    return
+
+
+def setLocoFunc7(event_struct):
+    return
+
+
+def setLocoFunc11(event_struct):
+    return
+
+
+def setLocoFunc8(event_struct):
+    return
+

@@ -21,13 +21,31 @@ extern "C" {
 #define UI_COMP_THRCOMP_HORN 5
 #define UI_COMP_THRCOMP_FUNCBUTTON 6
 #define UI_COMP_THRCOMP_FUNCBUTTON_FUNCLABEL 7
-#define _UI_COMP_THRCOMP_NUM 8
+#define UI_COMP_THRCOMP_FUNCPANEL 8
+#define UI_COMP_THRCOMP_FUNCPANEL_HEADLIGHTF0 9
+#define UI_COMP_THRCOMP_FUNCPANEL_HEADLIGHTF0_LABELF0 10
+#define UI_COMP_THRCOMP_FUNCPANEL_COUPLERF3 11
+#define UI_COMP_THRCOMP_FUNCPANEL_COUPLERF3_LABELF3 12
+#define UI_COMP_THRCOMP_FUNCPANEL_FLANGEF7 13
+#define UI_COMP_THRCOMP_FUNCPANEL_FLANGEF7_LABELF7 14
+#define UI_COMP_THRCOMP_FUNCPANEL_RADIATORF11 15
+#define UI_COMP_THRCOMP_FUNCPANEL_RADIATORF11_LABELF11 16
+#define UI_COMP_THRCOMP_FUNCPANEL_FUNCPANELCLOSE 17
+#define UI_COMP_THRCOMP_FUNCPANEL_FUNCPANELCLOSE_LABELCLOSE 18
+#define UI_COMP_THRCOMP_FUNCPANEL_MASTERSOUNDF8 19
+#define _UI_COMP_THRCOMP_NUM 20
 lv_obj_t *ui_ThrComp_create(lv_obj_t *comp_parent);
 void ui_event_comp_ThrComp_LocoThr( lv_event_t * e);
 void ui_event_comp_ThrComp_LocoName( lv_event_t * e);
 void ui_event_comp_ThrComp_LocoRev( lv_event_t * e);
 void ui_event_comp_ThrComp_horn( lv_event_t * e);
 void ui_event_comp_ThrComp_FuncButton( lv_event_t * e);
+void ui_event_comp_ThrComp_HeadLightF0( lv_event_t * e);
+void ui_event_comp_ThrComp_CouplerF3( lv_event_t * e);
+void ui_event_comp_ThrComp_FlangeF7( lv_event_t * e);
+void ui_event_comp_ThrComp_RadiatorF11( lv_event_t * e);
+void ui_event_comp_ThrComp_FuncPanelClose( lv_event_t * e);
+void ui_event_comp_ThrComp_MasterSoundF8( lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

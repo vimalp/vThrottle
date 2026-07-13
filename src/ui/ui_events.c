@@ -155,70 +155,61 @@ void setLocoHorn(lv_event_t * e)
 // Loco Function setting
 //-----------------------------------------------------
 
-static int curFuncBtnIdx = -1;
-
 // Opened the function panel. Save the index of throttle for which the function panel as opened.
 void openLocoFunc(lv_event_t * e)
 {
+	lv_obj_t*	funcOpenBtn = lv_event_get_target(e);
+	lv_obj_t* thrPanel = lv_obj_get_parent(funcOpenBtn);
+	lv_obj_t* funcPanel = ui_comp_get_child(thrPanel, UI_COMP_THRCOMP_FUNCPANEL);
 
-	lv_obj_t*	funcOpenBtn = lv_event_get_current_target(e);
 	// set curFuncBtnIdx which will be later used by 'setLocoFunc'
-	curFuncBtnIdx = getThrottleIdx(funcOpenBtn);
-	snprintf(dbgStr, sizeof(dbgStr), "OpenFuncPanel: thrIdx=%d\n", curFuncBtnIdx);
+	int thrIdx = getThrottleIdx(funcOpenBtn);
+	snprintf(dbgStr, sizeof(dbgStr), "OpenFuncPanel: thrIdx=%d\n", thrIdx);
 	c_serial_print(dbgStr);
 
 	// change the background of func panel based on throttle index
 	lv_color_t bg_color = lv_obj_get_style_bg_color(funcOpenBtn, LV_PART_MAIN);
-	lv_obj_set_style_bg_color(ui_funcPanel, bg_color, LV_PART_MAIN | LV_STATE_DEFAULT );
-
-	// set values of checkable function buttons
-	// currently only the headlight and sound functions are modal and set
-	if (curFuncVals[curFuncBtnIdx][0]) {
-		lv_obj_add_state(ui_HeadLightF0, LV_STATE_CHECKED);
-	}
-	else {
-		lv_obj_add_state(ui_HeadLightF0, LV_STATE_DEFAULT);
-	}
-
-	if (curFuncVals[curFuncBtnIdx][8]) {
-		c_serial_print("   Function 8: Button pressed\n");
-
-		lv_obj_add_state(ui_MasterSoundF8, LV_STATE_CHECKED);
-		lv_imgbtn_set_src(ui_MasterSoundF8, LV_IMGBTN_STATE_PRESSED, NULL, &ui_img_sound_png, NULL);
-	}
-	else {
-		c_serial_print("   Function 8: Button released\n");
-
-		lv_obj_add_state(ui_MasterSoundF8, LV_STATE_DEFAULT);
-		lv_imgbtn_set_src(ui_MasterSoundF8, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_sound_off_png, NULL);
-	}
-	lv_obj_invalidate(ui_MasterSoundF8); 
-
+	lv_obj_set_style_bg_color(funcPanel, bg_color, LV_PART_MAIN | LV_STATE_DEFAULT );
 }
 
-void setLocoFunc(lv_event_t * e)
+
+void setLocoFunc(lv_event_t *e, uint8_t func_idx, lv_state_t state_to_check)
 {
-	lv_obj_t* funcBtn = lv_event_get_current_target(e);
+	lv_obj_t* funcBtn = lv_event_get_target(e);
+	lv_obj_t* funcPanel = lv_obj_get_parent(funcBtn);
 
-	int func_num = -1;
-	if 			(funcBtn == ui_HeadLightF0)	{ func_num = 0; }
-	else if (funcBtn == ui_CouplerF3)	{ func_num = 3; }
-	else if (funcBtn == ui_FlangeF7)	{ func_num = 7; }
-	else if (funcBtn == ui_MasterSoundF8)	{ func_num = 8; }
-	else if (funcBtn == ui_RadiatorF11)	{ func_num = 11; }
-
-	snprintf(dbgStr, sizeof(dbgStr), "selectFunc: thrIdx=%d, func=%d\n", curFuncBtnIdx, func_num);
-	c_serial_print(dbgStr);
-
-	if (curFuncBtnIdx < 0 || func_num < 0)
-		return;
-
-	bool btnChecked = lv_obj_has_state(funcBtn, LV_STATE_CHECKED);
-	int32_t val = (btnChecked) ? 1 : 0;
-
-	setDccFunc(curFuncBtnIdx, func_num, val);
+	int thrIdx = getThrottleIdx(funcPanel);
+	int val = (lv_obj_has_state(funcBtn, state_to_check)) ? 1 : 0;
+	setDccFunc(thrIdx, func_idx, val);
 }
 
+void setLocoFunc0(lv_event_t * e)
+{
+	setLocoFunc(e, 0, LV_STATE_CHECKED);
+}
+
+void setLocoFunc3(lv_event_t * e)
+{
+	setLocoFunc(e, 3, LV_STATE_PRESSED);
+}
+
+void setLocoFunc7(lv_event_t * e)
+{
+	setLocoFunc(e, 7, LV_STATE_PRESSED);
+}
+
+void setLocoFunc11(lv_event_t * e)
+{
+	setLocoFunc(e, 11, LV_STATE_PRESSED);
+}
+
+void setLocoFunc8(lv_event_t * e)
+{
+	setLocoFunc(e, 8, LV_STATE_CHECKED);
+}
+
+//---------------------------------------------------------
+//---------------------------------------------------------
 void showLocoRoster(lv_event_t * e)
 {
 	// Your code here
@@ -233,6 +224,9 @@ void showRoutes(lv_event_t * e)
 {
 	// Your code here
 }
+
+//---------------------------------------------------------
+//---------------------------------------------------------
 
 void setTurnOut(lv_event_t * e)
 {
@@ -249,7 +243,6 @@ void setTurnOut(lv_event_t * e)
 	int32_t val = (lv_obj_has_state(turnoutBtn, LV_STATE_CHECKED) ? 1 : 0);
 	setDccTurnout(tidx, val);
 }
-
 
 //-------------------------------------------------------------
 // This function is called by the logic that calculates the signal
@@ -300,6 +293,8 @@ void powerOff(lv_event_t * e)
 {
 	gotoSleep();
 }
+
+
 
 
 
