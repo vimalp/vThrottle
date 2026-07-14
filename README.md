@@ -38,10 +38,10 @@ https://www.elecrow.com/crowpanel-advance-7-hmi-esp32-ai-display-800x480-ai-ips-
 Please follow the crowpanel tutorials (https://www.elecrow.com/wiki/HMI_Display_course.html#version-13) to install all libraries needed by crowpanel
 After downloading the project files and installing all libraries, configure Arduino IDE as follows;
 
-Tools->Board:  ESP32S3 Dev Module
-Tools->Flash Size: 16MB
-Tools->Partition Scheme:  Huge APP
-Tools->PSRAM:  OPI PSRAM
+* Tools->Board:  ESP32S3 Dev Module
+* Tools->Flash Size: 16MB
+* Tools->Partition Scheme:  Huge APP
+* Tools->PSRAM:  OPI PSRAM
 
 ## UI Features
 
