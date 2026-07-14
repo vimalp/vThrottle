@@ -5,7 +5,7 @@
 
 #include "ui.h"
 
-lv_obj_t *ui_Home = NULL;lv_obj_t *ui_Logo = NULL;lv_obj_t *ui_MainTitle = NULL;lv_obj_t *ui_WifiLevel = NULL;lv_obj_t *ui_WifiLabel = NULL;lv_obj_t *ui_layoutPanel = NULL;lv_obj_t *ui_OutLoop0 = NULL;lv_obj_t *ui_OutLoopLabelB = NULL;lv_obj_t *ui_OutLoop1 = NULL;lv_obj_t *ui_OutLoopLabelA = NULL;lv_obj_t *ui_TownLoop = NULL;lv_obj_t *ui_TownLoopLabel = NULL;lv_obj_t *ui_Siding = NULL;lv_obj_t *ui_TurnXCSet = NULL;lv_obj_t *ui_TurnTL0Set = NULL;lv_obj_t *ui_TurnTR0Set = NULL;lv_obj_t *ui_TurnTL2Set = NULL;lv_obj_t *ui_TurnTR2Set = NULL;lv_obj_t *ui_SHL0C = NULL;lv_obj_t *ui_SHL1TD = NULL;lv_obj_t *ui_SHL1TC = NULL;lv_obj_t *ui_SHL2C = NULL;lv_obj_t *ui_SHL2D = NULL;lv_obj_t *ui_SHR0TC = NULL;lv_obj_t *ui_SHR0TD = NULL;lv_obj_t *ui_SHR1C = NULL;lv_obj_t *ui_SHR2TC = NULL;lv_obj_t *ui_SHR2TD = NULL;lv_obj_t *ui_SidingLabel = NULL;lv_obj_t *ui_ThrPanel = NULL;lv_obj_t *ui_ThrComp0 = NULL;lv_obj_t *ui_ThrComp1 = NULL;lv_obj_t *ui_ThrComp2 = NULL;lv_obj_t *ui_HomePowerOff = NULL;lv_obj_t *ui_RouteBtn = NULL;lv_obj_t *ui_RouteBtnLabel = NULL;lv_obj_t *ui_DccExBtn = NULL;lv_obj_t *ui_dccexKeyboard = NULL;lv_obj_t *ui_dccexCmdText = NULL;lv_obj_t *ui_keyboardClose = NULL;lv_obj_t *ui_CloseLabel = NULL;
+lv_obj_t *ui_Home = NULL;lv_obj_t *ui_Logo = NULL;lv_obj_t *ui_MainTitle = NULL;lv_obj_t *ui_WifiLevel = NULL;lv_obj_t *ui_WifiLabel = NULL;lv_obj_t *ui_layoutPanel = NULL;lv_obj_t *ui_OutLoop0 = NULL;lv_obj_t *ui_OutLoopLabelB = NULL;lv_obj_t *ui_OutLoop1 = NULL;lv_obj_t *ui_OutLoopLabelA = NULL;lv_obj_t *ui_TownLoop = NULL;lv_obj_t *ui_TownLoopLabel = NULL;lv_obj_t *ui_Siding = NULL;lv_obj_t *ui_TurnXCSet = NULL;lv_obj_t *ui_TurnTL0Set = NULL;lv_obj_t *ui_TurnTR0Set = NULL;lv_obj_t *ui_TurnTL2Set = NULL;lv_obj_t *ui_TurnTR2Set = NULL;lv_obj_t *ui_SHL0C = NULL;lv_obj_t *ui_SHL1TD = NULL;lv_obj_t *ui_SHL1TC = NULL;lv_obj_t *ui_SHL2C = NULL;lv_obj_t *ui_SHL2D = NULL;lv_obj_t *ui_SHR0TC = NULL;lv_obj_t *ui_SHR0TD = NULL;lv_obj_t *ui_SHR1C = NULL;lv_obj_t *ui_SHR2TC = NULL;lv_obj_t *ui_SHR2TD = NULL;lv_obj_t *ui_SidingLabel = NULL;lv_obj_t *ui_ThrPanel = NULL;lv_obj_t *ui_ThrComp0 = NULL;lv_obj_t *ui_ThrComp1 = NULL;lv_obj_t *ui_ThrComp2 = NULL;lv_obj_t *ui_HomePowerOff = NULL;lv_obj_t *ui_RouteBtn = NULL;lv_obj_t *ui_RouteBtnLabel = NULL;lv_obj_t *ui_DccExBtn = NULL;lv_obj_t *ui_KeyboardPanel = NULL;lv_obj_t *ui_dccexKeyboard = NULL;lv_obj_t *ui_dccexCmdText = NULL;lv_obj_t *ui_keyboardClose = NULL;lv_obj_t *ui_CloseLabel = NULL;
 // event funtions
 void ui_event_TurnXCSet( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -75,9 +75,7 @@ void ui_event_DccExBtn( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);
 
 if ( event_code == LV_EVENT_CLICKED) {
-      _ui_flag_modify( ui_dccexCmdText, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
-      _ui_flag_modify( ui_dccexKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
-      _ui_flag_modify( ui_keyboardClose, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+      _ui_flag_modify( ui_KeyboardPanel, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
 }
 }
 
@@ -93,9 +91,7 @@ void ui_event_keyboardClose( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);
 
 if ( event_code == LV_EVENT_CLICKED) {
-      _ui_flag_modify( ui_dccexCmdText, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
-      _ui_flag_modify( ui_dccexKeyboard, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
-      _ui_flag_modify( ui_keyboardClose, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+      _ui_flag_modify( ui_KeyboardPanel, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
 }
 }
 
@@ -573,12 +569,12 @@ lv_obj_set_height( ui_ThrPanel, 210);
 lv_obj_set_x( ui_ThrPanel, 175 );
 lv_obj_set_y( ui_ThrPanel, 265 );
 lv_obj_add_flag( ui_ThrPanel, LV_OBJ_FLAG_OVERFLOW_VISIBLE );   /// Flags
-lv_obj_clear_flag( ui_ThrPanel, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+lv_obj_clear_flag( ui_ThrPanel, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN );    /// Flags
+lv_obj_set_scrollbar_mode(ui_ThrPanel, LV_SCROLLBAR_MODE_OFF);
 lv_obj_set_style_bg_color(ui_ThrPanel, lv_color_hex(0xF8EAEA), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_bg_opa(ui_ThrPanel, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
-lv_obj_set_style_border_color(ui_ThrPanel, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT );
-lv_obj_set_style_border_opa(ui_ThrPanel, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
-lv_obj_set_style_border_width(ui_ThrPanel, 1, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_border_color(ui_ThrPanel, lv_color_hex(0xE0DEDE), LV_PART_MAIN | LV_STATE_DEFAULT );
+lv_obj_set_style_border_opa(ui_ThrPanel, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_shadow_color(ui_ThrPanel, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_shadow_opa(ui_ThrPanel, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_shadow_width(ui_ThrPanel, 5, LV_PART_MAIN| LV_STATE_DEFAULT);
@@ -686,14 +682,27 @@ lv_obj_set_style_shadow_spread(ui_DccExBtn, 2, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_shadow_ofs_x(ui_DccExBtn, 2, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_shadow_ofs_y(ui_DccExBtn, 2, LV_PART_MAIN| LV_STATE_DEFAULT);
 
-ui_dccexKeyboard = lv_keyboard_create(ui_Home);
+ui_KeyboardPanel = lv_obj_create(ui_Home);
+lv_obj_set_width( ui_KeyboardPanel, 720);
+lv_obj_set_height( ui_KeyboardPanel, 300);
+lv_obj_set_x( ui_KeyboardPanel, -4 );
+lv_obj_set_y( ui_KeyboardPanel, 86 );
+lv_obj_set_align( ui_KeyboardPanel, LV_ALIGN_CENTER );
+lv_obj_add_flag( ui_KeyboardPanel, LV_OBJ_FLAG_HIDDEN );   /// Flags
+lv_obj_clear_flag( ui_KeyboardPanel, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+lv_obj_set_style_bg_color(ui_KeyboardPanel, lv_color_hex(0xC9F0FB), LV_PART_MAIN | LV_STATE_DEFAULT );
+lv_obj_set_style_bg_opa(ui_KeyboardPanel, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_border_color(ui_KeyboardPanel, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT );
+lv_obj_set_style_border_opa(ui_KeyboardPanel, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_border_width(ui_KeyboardPanel, 1, LV_PART_MAIN| LV_STATE_DEFAULT);
+
+ui_dccexKeyboard = lv_keyboard_create(ui_KeyboardPanel);
 lv_keyboard_set_mode(ui_dccexKeyboard,LV_KEYBOARD_MODE_TEXT_UPPER);
-lv_obj_set_width( ui_dccexKeyboard, 708);
-lv_obj_set_height( ui_dccexKeyboard, 272);
-lv_obj_set_x( ui_dccexKeyboard, -43 );
-lv_obj_set_y( ui_dccexKeyboard, 99 );
+lv_obj_set_width( ui_dccexKeyboard, 700);
+lv_obj_set_height( ui_dccexKeyboard, 250);
+lv_obj_set_x( ui_dccexKeyboard, 0 );
+lv_obj_set_y( ui_dccexKeyboard, 22 );
 lv_obj_set_align( ui_dccexKeyboard, LV_ALIGN_CENTER );
-lv_obj_add_flag( ui_dccexKeyboard, LV_OBJ_FLAG_HIDDEN );   /// Flags
 lv_obj_set_style_radius(ui_dccexKeyboard, 10, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_bg_color(ui_dccexKeyboard, lv_color_hex(0x37758C), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_bg_opa(ui_dccexKeyboard, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
@@ -711,27 +720,26 @@ lv_obj_set_style_text_color(ui_dccexKeyboard, lv_color_hex(0x000000), LV_PART_IT
 lv_obj_set_style_text_opa(ui_dccexKeyboard, 255, LV_PART_ITEMS| LV_STATE_DEFAULT);
 lv_obj_set_style_text_font(ui_dccexKeyboard, &lv_font_montserrat_18, LV_PART_ITEMS| LV_STATE_DEFAULT);
 
-ui_dccexCmdText = lv_textarea_create(ui_Home);
+ui_dccexCmdText = lv_textarea_create(ui_KeyboardPanel);
 lv_obj_set_width( ui_dccexCmdText, 298);
 lv_obj_set_height( ui_dccexCmdText, LV_SIZE_CONTENT);   /// 70
-lv_obj_set_x( ui_dccexCmdText, -79 );
-lv_obj_set_y( ui_dccexCmdText, -60 );
+lv_obj_set_x( ui_dccexCmdText, 0 );
+lv_obj_set_y( ui_dccexCmdText, -126 );
 lv_obj_set_align( ui_dccexCmdText, LV_ALIGN_CENTER );
 lv_textarea_set_placeholder_text(ui_dccexCmdText,"Placeholder...");
 lv_textarea_set_one_line(ui_dccexCmdText,true);
-lv_obj_add_flag( ui_dccexCmdText, LV_OBJ_FLAG_HIDDEN );   /// Flags
 lv_obj_set_style_bg_color(ui_dccexCmdText, lv_color_hex(0xF0F28D), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_bg_opa(ui_dccexCmdText, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_border_color(ui_dccexCmdText, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_border_opa(ui_dccexCmdText, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_border_width(ui_dccexCmdText, 1, LV_PART_MAIN| LV_STATE_DEFAULT);
 
-ui_keyboardClose = lv_btn_create(ui_Home);
+ui_keyboardClose = lv_btn_create(ui_KeyboardPanel);
 lv_obj_set_width( ui_keyboardClose, 68);
-lv_obj_set_height( ui_keyboardClose, 50);
-lv_obj_set_x( ui_keyboardClose, 711 );
-lv_obj_set_y( ui_keyboardClose, 199 );
-lv_obj_add_flag( ui_keyboardClose, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_SCROLL_ON_FOCUS );   /// Flags
+lv_obj_set_height( ui_keyboardClose, 35);
+lv_obj_set_x( ui_keyboardClose, 618 );
+lv_obj_set_y( ui_keyboardClose, -17 );
+lv_obj_add_flag( ui_keyboardClose, LV_OBJ_FLAG_SCROLL_ON_FOCUS );   /// Flags
 lv_obj_clear_flag( ui_keyboardClose, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 lv_obj_set_style_bg_color(ui_keyboardClose, lv_color_hex(0x20FA2C), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_bg_opa(ui_keyboardClose, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
@@ -808,6 +816,7 @@ ui_HomePowerOff= NULL;
 ui_RouteBtn= NULL;
 ui_RouteBtnLabel= NULL;
 ui_DccExBtn= NULL;
+ui_KeyboardPanel= NULL;
 ui_dccexKeyboard= NULL;
 ui_dccexCmdText= NULL;
 ui_keyboardClose= NULL;

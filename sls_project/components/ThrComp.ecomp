@@ -7473,8 +7473,8 @@
           "flags": 17,
           "strtype": "OBJECT/Position",
           "intarray": [
-            -186,
-            -17
+            -175,
+            -77
           ],
           "InheritedType": 7
         },
@@ -7840,7 +7840,7 @@
       "flags": 17,
       "strtype": "OBJECT/Position",
       "intarray": [
-        280,
+        -20,
         -20
       ],
       "InheritedType": 7
@@ -7951,7 +7951,6 @@
     },
     {
       "nid": 225,
-      "flags": 1048576,
       "strtype": "OBJECT/Scrolling",
       "InheritedType": 1
     },
@@ -7964,13 +7963,13 @@
     {
       "nid": 240,
       "strtype": "OBJECT/Scroll_elastic",
-      "strval": "True",
+      "strval": "False",
       "InheritedType": 2
     },
     {
       "nid": 250,
       "strtype": "OBJECT/Scroll_momentum",
-      "strval": "True",
+      "strval": "False",
       "InheritedType": 2
     },
     {
@@ -7982,7 +7981,7 @@
     {
       "nid": 270,
       "strtype": "OBJECT/Scroll_chain",
-      "strval": "True",
+      "strval": "False",
       "InheritedType": 2
     },
     {
@@ -8000,7 +7999,7 @@
     {
       "nid": 300,
       "strtype": "OBJECT/Scrollbar_mode",
-      "strval": "AUTO",
+      "strval": "OFF",
       "InheritedType": 3
     },
     {
@@ -8098,6 +8097,18 @@
                 222,
                 222,
                 255
+              ],
+              "InheritedType": 7
+            },
+            {
+              "nid": 10710,
+              "flags": 4096,
+              "strtype": "_style/Border_Color",
+              "intarray": [
+                224,
+                222,
+                222,
+                0
               ],
               "InheritedType": 7
             }

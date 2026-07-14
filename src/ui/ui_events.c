@@ -210,6 +210,8 @@ void setLocoFunc8(lv_event_t * e)
 
 //---------------------------------------------------------
 //---------------------------------------------------------
+#if 0
+
 void showLocoRoster(lv_event_t * e)
 {
 	// Your code here
@@ -219,6 +221,7 @@ void showTrainRoutes(lv_event_t * e)
 {
 	// Your code here
 }
+#endif
 
 void showRoutes(lv_event_t * e)
 {

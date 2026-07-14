@@ -59,6 +59,7 @@ extern lv_obj_t *ui_RouteBtn;
 extern lv_obj_t *ui_RouteBtnLabel;
 extern void ui_event_DccExBtn( lv_event_t * e);
 extern lv_obj_t *ui_DccExBtn;
+extern lv_obj_t *ui_KeyboardPanel;
 extern void ui_event_dccexKeyboard( lv_event_t * e);
 extern lv_obj_t *ui_dccexKeyboard;
 extern lv_obj_t *ui_dccexCmdText;

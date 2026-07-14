@@ -119,12 +119,15 @@ lv_obj_t *cui_ThrComp;
 cui_ThrComp = lv_obj_create(comp_parent);
 lv_obj_set_width( cui_ThrComp, 150);
 lv_obj_set_height( cui_ThrComp, 210);
-lv_obj_set_x( cui_ThrComp, 280 );
+lv_obj_set_x( cui_ThrComp, -20 );
 lv_obj_set_y( cui_ThrComp, -20 );
 lv_obj_add_flag( cui_ThrComp, LV_OBJ_FLAG_OVERFLOW_VISIBLE );   /// Flags
-lv_obj_clear_flag( cui_ThrComp, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+lv_obj_clear_flag( cui_ThrComp, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN );    /// Flags
+lv_obj_set_scrollbar_mode(cui_ThrComp, LV_SCROLLBAR_MODE_OFF);
 lv_obj_set_style_bg_color(cui_ThrComp, lv_color_hex(0xE0DEDE), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_bg_opa(cui_ThrComp, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_border_color(cui_ThrComp, lv_color_hex(0xE0DEDE), LV_PART_MAIN | LV_STATE_DEFAULT );
+lv_obj_set_style_border_opa(cui_ThrComp, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 lv_obj_t *cui_LocoThr;
 cui_LocoThr = lv_slider_create(cui_ThrComp);
@@ -249,8 +252,8 @@ lv_obj_t *cui_FuncPanel;
 cui_FuncPanel = lv_obj_create(cui_ThrComp);
 lv_obj_set_width( cui_FuncPanel, 200);
 lv_obj_set_height( cui_FuncPanel, 180);
-lv_obj_set_x( cui_FuncPanel, -186 );
-lv_obj_set_y( cui_FuncPanel, -17 );
+lv_obj_set_x( cui_FuncPanel, -175 );
+lv_obj_set_y( cui_FuncPanel, -77 );
 lv_obj_add_flag( cui_FuncPanel, LV_OBJ_FLAG_HIDDEN );   /// Flags
 lv_obj_clear_flag( cui_FuncPanel, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 lv_obj_set_style_bg_color(cui_FuncPanel, lv_color_hex(0xF8F482), LV_PART_MAIN | LV_STATE_DEFAULT );
