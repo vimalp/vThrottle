@@ -45,14 +45,15 @@ After downloading the project files and installing all libraries, configure Ardu
 
 ## UI Features
 
-* **Layout Panel:**  This shows the layout of the tracks. The layout of tracks will differ for each person's own setup. The tracks are laid out using Panel widget of SQL Studio.
+* **Layout Panel:**  This shows the layout of the tracks. The layout of tracks will differ for each person's own setup. The tracks are laid out using Panel widget of Squareline Studio.
 * **Turnouts:**      The turnout points are shown on the layout panel as square icons with tracks. Clicking on the turnout icon changes the icon image to show 'thrown' state of the tracks.
                  <img width="15" height="15" alt="turnout_tl0_0" src="https://github.com/user-attachments/assets/485d58cc-76cf-40aa-bbb5-a0ec73a6d03d" />
 * **Signals:**      Signals are shown as round objects near turnout icons. The siganals are informative only and are set by the underlying interlock system (if implemented)
 
 * **Throttle Panels:** Each throttle panel controls one locomotive on the layout. Each throttle has following controls
    - **Speed Slider:**  Controls the speed of locomotove associated with this throtlle. The speed value is also displayed on top-right side of the slider.
-   - **Horn:**          Horn button is a momentary switch that will sound horn as long as it is pressed down
+   - **Horn:**  (<img width="20" height="20" alt="horn" src="https://github.com/user-attachments/assets/ba1ec039-9a47-4b64-9838-a9f5cacc86db" />):
+       Horn button is a momentary switch that will sound horn as long as it is pressed down
    - **Reverse** (<img width="20" height="20" alt="loco_fwd" src="https://github.com/user-attachments/assets/1fcc99aa-32cc-4880-8e38-d092c14275f1" />):  Controle forward/reverse direction of locomotive
    - **Loco Address:**  This dropdown menu shows which locomotive is currently associated with this throttle. Clicking on the name will bringup the complete roster of all locomotives and user can select any loco
    - **Fn Button:**     This will bringup a function panel. The function panel has a number of button associated with some of the common locomotive functions (headlight, sounds etc).
