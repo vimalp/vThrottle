@@ -11,7 +11,7 @@
 //
 //******************************************************************
 
-#include "esp32_tft_throttle.h"
+#include "vThrottle.h"
 
 #include "pins_config.h"
 #include "LovyanGFX_Driver.h"

@@ -1,7 +1,7 @@
 // 
 // **************************************************************************
 //
-// dccex_throttle.h
+// vThrottle.h
 //
 // Common include file for dccex_throttle source
 //
