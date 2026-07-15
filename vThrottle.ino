@@ -45,7 +45,7 @@ Turnout*      turnoutList[NUM_TURNOUTS] = { nullptr, nullptr, nullptr, nullptr, 
 // wifi config
 //--------------------------------------------------------
 const char *ssid = "vTrainWifi";        // WiFi SSID name here
-const char *password = "Vkr@2987";          // WiFi password here
+const char *password = "RunMyTrains";          // WiFi password here
 IPAddress serverAddress(192, 168, 4, 1);    // IP address of your EX-CommandStation
 const int serverPort = 2560;                      // Network port of your EX-CommandStation
 
