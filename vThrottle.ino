@@ -38,8 +38,16 @@ uint16_t touch_x, touch_y;
 WiFiClient    client;
 DCCEXProtocol dccexProtocol;
 MyDelegate    dccexDelegate;
-Loco*         locoList[NUM_THROTTLES] = { nullptr, nullptr, nullptr};
-Turnout*      turnoutList[NUM_TURNOUTS] = { nullptr, nullptr, nullptr, nullptr, nullptr};
+
+// Loco Roster List. Saves pointer to Loco Object from DCCEXProtocol
+Loco*         locoList[NUM_THROTTLES] ;
+
+// Turnout list. Saves turnout DCC id (i.e address)
+int16_t       turnoutList[NUM_TURNOUTS];
+
+// block occupancy sensor list
+int16_t       sensorList[NUM_BLOCK_SENSORS];
+
 
 //--------------------------------------------------------
 // wifi config
@@ -245,6 +253,13 @@ void setup()
 
 void init_dcc_lists() 
 {
+  // Initialize obect id arrays
+  for (int lidx=0; lidx < NUM_THROTTLES; ++lidx)      { locoList[lidx] = nullptr; }
+  for (int tidx=0; tidx < NUM_TURNOUTS; ++tidx)       { turnoutList[tidx] = -1; }
+  for (int sidx=0; sidx < NUM_BLOCK_SENSORS; ++sidx)  { sensorList[sidx] = -1; }
+
+
+  // wait unti all lists are recieved.
   while (!dccexProtocol.receivedLists()) {
      // request loco roster list and turnout lists
     dccexProtocol.getLists(true, true, false, false);

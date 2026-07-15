@@ -13,27 +13,12 @@
 //
 #include "vThrottle.h"
 
-//------------------------------------------------------------------
-// Current value of all loco functions. 
-// Used for setting correct values in Func Panel
-//------------------------------------------------------------------
-
-uint8_t curFuncVals[NUM_THROTTLES][MAX_NUM_FUNCS] = {
-  { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-  { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-  { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-};
 
 //------------------------------------------------------------------
 // Signal head addresses and aspect values
 // Following dccaddresses are defined for signals in CommandStation's myautomatioh.h
 // Addresses must match.
 //------------------------------------------------------------------
-// aspect value indices
-#define ASPECT_DARK     0
-#define ASPECT_RED      1
-#define ASPECT_YELLOW   2
-#define ASPECT_GREEN    3
 
 signalHead_t signalHeads[NUM_SIGNAL_HEADS] = 
 {
@@ -205,11 +190,11 @@ void updateTurnouts()
   for (Turnout *tout = dccexProtocol.turnouts->getFirst(); tout; tout = tout->getNext()) {
     int tid = tout->getId();
     switch (tid) {
-      case DCC_TL0: { turnoutList[TURNOUT_TL0] = tout; }  break;
-      case DCC_TR0: { turnoutList[TURNOUT_TR0] = tout; }  break;
-      case DCC_TL2: { turnoutList[TURNOUT_TL2] = tout; }  break;
-      case DCC_TR2: { turnoutList[TURNOUT_TR2] = tout; }  break;
-      case DCC_XC:  { turnoutList[TURNOUT_XC] = tout;  }  break;
+      case DCC_TL0: { turnoutList[TURNOUT_TL0] = tid; }  break;
+      case DCC_TR0: { turnoutList[TURNOUT_TR0] = tid; }  break;
+      case DCC_TL2: { turnoutList[TURNOUT_TL2] = tid; }  break;
+      case DCC_TR2: { turnoutList[TURNOUT_TR2] = tid; }  break;
+      case DCC_XC:  { turnoutList[TURNOUT_XC]  = tid; }  break;
       default:
         Serial.printf("Error: Received unknown turnout -> %d\n", tid);
         break;
@@ -240,7 +225,6 @@ void setDccHorn(int thr_idx, int val)
 void setDccFunc(int thr_idx, int func_num, int val)
 {
   if (thr_idx >= 0 && thr_idx < NUM_THROTTLES && locoList[thr_idx]) {
-    curFuncVals[thr_idx][func_num] = val;
     if (val)
         dccexProtocol.functionOn(locoList[thr_idx], func_num);
       else
@@ -254,15 +238,15 @@ void setDccFunc(int thr_idx, int func_num, int val)
 void setDccTurnout(int turn_idx, int val)
 {
   char  cmdStr[20];
-  if (turn_idx >= 0 && turn_idx < NUM_TURNOUTS && turnoutList[turn_idx]) {
+  if (turn_idx >= 0 && turn_idx < NUM_TURNOUTS && (turnoutList[turn_idx] > 0)) {
 #if 0
-    snprintf(cmdStr, sizeof(cmdStr), "<T %d %d>", turnoutList[turn_idx]->getId(), val);
+    snprintf(cmdStr, sizeof(cmdStr), "<T %d %d>", turnoutList[turn_idx], val);
     dccexProtocol.sendCommand(cmdStr);
 #endif
     if (val) 
-      dccexProtocol.throwTurnout(turnoutList[turn_idx]->getId());
+      dccexProtocol.throwTurnout(turnoutList[turn_idx]);
     else
-      dccexProtocol.closeTurnout(turnoutList[turn_idx]->getId());
+      dccexProtocol.closeTurnout(turnoutList[turn_idx]);
   }
 }
 

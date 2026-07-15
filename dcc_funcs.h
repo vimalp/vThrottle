@@ -12,10 +12,20 @@
 #pragma once
 
 //----------------------------------------------------------------
+// Throttle defines
+//----------------------------------------------------------------
+
+#define NUM_THROTTLES        3
+#define MAX_NUM_FUNCS       16
+#define NUM_TURNOUTS         5
+#define NUM_BLOCK_SENSORS   10
+#define NUM_SIGNAL_HEADS    10
+#define NUM_SIGNAL_ASPECTS   4   
+
+//----------------------------------------------------------------
 // Turnout defines
 //----------------------------------------------------------------
 
-#define NUM_TURNOUTS    5
 // Following ids are defined for turnouts in CommandStation's myautomatioh.h
 // Define macros for controlling single coil turnouts using DCC decoders
 #define DCC_TL0     200
@@ -31,12 +41,16 @@
 #define TURNOUT_TR2     3
 #define TURNOUT_XC      4
 
+extern int16_t  turnoutList[NUM_TURNOUTS];
+
+//----------------------------------------------------------------
+// block occupancy sensor list
+//----------------------------------------------------------------
+extern int16_t  sensorList[NUM_BLOCK_SENSORS];
+
 //----------------------------------------------------------------
 // Signal Head defines
 //----------------------------------------------------------------
-#define NUM_SIGNAL_HEADS    10
-#define NUM_SIGNAL_ASPECTS  4   
-
 // local indices for turnouts
 #define SIGNAL_SHL0C     0
 #define SIGNAL_SHL1TC    1
@@ -50,10 +64,19 @@
 #define SIGNAL_SHR2TC    8
 #define SIGNAL_SHR2TD    9
 
+// aspect value indices
+#define ASPECT_DARK     0
+#define ASPECT_RED      1
+#define ASPECT_YELLOW   2
+#define ASPECT_GREEN    3
+
 typedef struct {
   uint16_t    dccAddr;
   uint8_t     aspect;     // current aspect 
 } signalHead_t;
+
+extern signalHead_t signalHeads[NUM_SIGNAL_HEADS];
+extern uint32_t AspectCols[NUM_SIGNAL_ASPECTS];
 
 //----------------------------------------------------------------
 //
@@ -63,12 +86,6 @@ typedef struct {
 extern "C" {
 #endif
 
-#define NUM_THROTTLES     3
-#define MAX_NUM_FUNCS     16
-extern uint8_t curFuncVals[NUM_THROTTLES][MAX_NUM_FUNCS];
-
-extern signalHead_t signalHeads[NUM_SIGNAL_HEADS];
-extern uint32_t AspectCols[NUM_SIGNAL_ASPECTS];
 
 //--------------------------------------------------------
 // debug print macros

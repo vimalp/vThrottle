@@ -16,6 +16,9 @@
 
 #include <DCCEXProtocol.h>
 #include <WiFi.h>
+
+#include "interlock.h"
+#include "signal_interlock.h"
 #include "dcc_funcs.h"
 
 
@@ -39,7 +42,6 @@ extern Loco*    locoList[NUM_THROTTLES];
 //-----------------------------------------
 //-----------------------------------------
 
-extern Turnout*   turnoutList[NUM_TURNOUTS];
 
 //-----------------------------------------
 // DCC Loco functions
