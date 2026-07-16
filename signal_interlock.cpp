@@ -36,3 +36,23 @@ void init_signal_interlock()
   // load rules for setting signals and turnouts
   
 }
+
+//--------------------------------------------------------
+// received a block detector sensor update from layout
+// sensor index is internal index to sensor list
+//--------------------------------------------------------
+
+void interlock_update_sensor(uint16_t sensor_idx)
+{
+
+}
+
+//--------------------------------------------------------
+// received a turnout update from UI.
+// turnout index is internal index to turnout list
+//--------------------------------------------------------
+
+void interlock_update_turnout(uint16_t turnout_index, bool thrown)
+{
+
+}

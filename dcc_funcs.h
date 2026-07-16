@@ -45,7 +45,20 @@ extern int16_t  turnoutList[NUM_TURNOUTS];
 
 //----------------------------------------------------------------
 // block occupancy sensor list
+// The DCC Addresses should match the ones in Command Station
 //----------------------------------------------------------------
+
+#define DCC_BLK0      108
+#define DCC_BLK1      109
+#define DCC_BLK2      103
+#define DCC_BLK3      110
+#define DCC_BLK4      113
+#define DCC_BLK5      104
+#define DCC_BLK6      111
+#define DCC_BLK7      114
+#define DCC_BLK8      105
+#define DCC_BLK9      112
+
 extern int16_t  sensorList[NUM_BLOCK_SENSORS];
 
 //----------------------------------------------------------------

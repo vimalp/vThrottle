@@ -39,3 +39,11 @@
 #define BLOCKCLEAR 0
 #define BLOCKOCCUPIED 1
 
+//--------------------------------------------------------
+// exported function
+//--------------------------------------------------------
+extern void interlock_update_sensor(uint16_t sensor_idx);
+
+// turnout_index: index to turnoutList
+// thrown:  true if turnout was thrown, false if closed.
+extern void interlock_update_turnout(uint16_t turnout_index, bool thrown);

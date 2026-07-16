@@ -202,6 +202,53 @@ void updateTurnouts()
   }
 }
 
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
+
+void updateSensors() 
+{
+  int s_idx = 0;
+  for (Sensor *s = dccexProtocol.sensors->getFirst(); s; s = s->getNext()) {
+    int s_addr = s->getId();
+    DEBUG_PRINTF("Got Sensor: %d\n", s_addr);
+
+    switch (s_addr) {
+      case  DCC_BLK0:  sensorList[0] = s_addr;   break; 
+      case  DCC_BLK1:  sensorList[1] = s_addr;   break; 
+      case  DCC_BLK2:  sensorList[2] = s_addr;   break; 
+      case  DCC_BLK3:  sensorList[3] = s_addr;   break; 
+      case  DCC_BLK4:  sensorList[4] = s_addr;   break; 
+      case  DCC_BLK5:  sensorList[5] = s_addr;   break; 
+      case  DCC_BLK6:  sensorList[6] = s_addr;   break; 
+      case  DCC_BLK7:  sensorList[7] = s_addr;   break; 
+      case  DCC_BLK8:  sensorList[8] = s_addr;   break; 
+      case  DCC_BLK9:  sensorList[9] = s_addr;   break; 
+      default:
+        DEBUG_PRINTF("Error: Received unknown sensor address = %d\n", s_addr);
+        break;
+    }
+  }
+}
+
+
+uint16_t get_sensor_index_from_addr(uint16_t sensor_addr)
+{
+  switch (sensor_addr) {
+    case  DCC_BLK0:  return 0; 
+    case  DCC_BLK1:  return 1;
+    case  DCC_BLK2:  return 2;
+    case  DCC_BLK3:  return 3;
+    case  DCC_BLK4:  return 4;
+    case  DCC_BLK5:  return 5;
+    case  DCC_BLK6:  return 6; 
+    case  DCC_BLK7:  return 7; 
+    case  DCC_BLK8:  return 8;
+    case  DCC_BLK9:  return 9;
+    default:
+      DEBUG_PRINTF("Error: get_sensor_index_from_addr: unknown sensor address = %d\n", sensor_addr);
+      break;
+  }
+}
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
@@ -239,14 +286,12 @@ void setDccTurnout(int turn_idx, int val)
 {
   char  cmdStr[20];
   if (turn_idx >= 0 && turn_idx < NUM_TURNOUTS && (turnoutList[turn_idx] > 0)) {
-#if 0
-    snprintf(cmdStr, sizeof(cmdStr), "<T %d %d>", turnoutList[turn_idx], val);
-    dccexProtocol.sendCommand(cmdStr);
-#endif
     if (val) 
       dccexProtocol.throwTurnout(turnoutList[turn_idx]);
     else
       dccexProtocol.closeTurnout(turnoutList[turn_idx]);
+
+    interlock_update_turnout(turn_idx, val);
   }
 }
 

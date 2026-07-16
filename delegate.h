@@ -32,6 +32,24 @@ class MyDelegate : public DCCEXProtocolDelegate
       updateTurnouts();
     }
 
+    void receivedSensorList() override {
+      int sensorCnt = dccexProtocol.getSensorCount();
+      DEBUG_PRINTF("\nReceived Sensor List: Number of sensors=%d\n", sensorCnt);
+      if (sensorCnt < NUM_BLOCK_SENSORS) {
+        DEBUG_PRINTF(".. Waiting more more sensors...\n");
+        return;
+      }
+      updateSensors();
+    }
+
+   void receivedSensorState(int sensor_addr, bool active) 
+   {
+      DEBUG_PRINTF("\nReceived Sensor State: addr=%d, val=%d\n", sensor_addr, active);
+      uint16_t sensor_idx = get_sensor_index_from_addr(sensor_addr);
+      interlock_update_sensor(sensor_idx);
+   }
+
+
     void receivedMessage(const char *message) {
       DEBUG_PRINTF("Received Message: %s\n", message);
     }
