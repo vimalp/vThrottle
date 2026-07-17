@@ -46,7 +46,9 @@ class MyDelegate : public DCCEXProtocolDelegate
    {
       DEBUG_PRINTF("\nReceived Sensor State: addr=%d, val=%d\n", sensor_addr, active);
       uint16_t sensor_idx = get_sensor_index_from_addr(sensor_addr);
+      setLayoutBlockHighlight(sensor_idx, active);
       interlock_update_sensor(sensor_idx);
+
    }
 
 

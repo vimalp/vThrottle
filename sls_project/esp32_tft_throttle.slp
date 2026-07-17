@@ -1,6 +1,6 @@
 {
-    "uiExportFolderPath": "/Users/vimal/Documents/Crowpanel/esp32_tft_throttle/src/ui",
-    "projectExportFolderPath": "/Users/vimal/Documents/Crowpanel/esp32_tft_throttle/sls_project",
+    "uiExportFolderPath": "/Users/vimal/Documents/Crowpanel/vThrottle/src/ui",
+    "projectExportFolderPath": "/Users/vimal/Documents/Crowpanel/vThrottle/sls_project",
     "drive_stdio": "-",
     "drive_stdio_path": "",
     "drive_posix": "-",

@@ -276,6 +276,72 @@ void setSignalAspect(uint8_t signal_idx, uint8_t aspect_val)
 }
 
 //---------------------------------------------------------
+// Use block detection sensor to highlight a block of
+// track on the layout panel
+// Note: The tracks on the layout panels are made of 
+// panel widgets. Some of the block tracks are made up 
+// of multiple panels. This code needs to know which 
+// block has multiple panels.
+//---------------------------------------------------------
+
+#define OBJ_ADD_STATE_CONTAINER(b)	\
+		lv_obj_add_state(ui_Blk ## b ## P0, blk_state);	\
+		lv_obj_add_state(ui_Blk ## b ## P1, blk_state);	\
+		lv_obj_add_state(ui_Blk ## b ## P2, blk_state);
+	
+
+
+void setLayoutBlockHighlight(uint16_t sensor_idx, bool active)
+{
+	// set object state based on active. The object state will determine its style
+	lv_state_t	blk_state = (active) ? LV_STATE_USER_1 : LV_STATE_DEFAULT;
+
+	switch(sensor_idx) {
+		case 0:		
+			lv_obj_add_state(ui_Block0, blk_state);		
+			break;
+		
+		case 1: 	// it is a container with 3 panels
+			OBJ_ADD_STATE_CONTAINER(1)
+			break;
+
+		case 2:
+			OBJ_ADD_STATE_CONTAINER(2)
+			break;
+
+		case 3:
+			lv_obj_add_state(ui_Block3, blk_state);		
+			break;
+
+		case 4:
+			OBJ_ADD_STATE_CONTAINER(4)
+			break;
+
+		case 5:
+			OBJ_ADD_STATE_CONTAINER(5)
+			break;
+
+		case 6:
+			lv_obj_add_state(ui_Block6, blk_state);		
+			break;
+
+		case 7:
+			OBJ_ADD_STATE_CONTAINER(7)
+			break;
+
+		case 8:
+			OBJ_ADD_STATE_CONTAINER(8)
+			break;
+
+		case 9:
+			lv_obj_add_state(ui_Block9, blk_state);		
+			break;
+
+		default: break;
+	}
+}
+
+//---------------------------------------------------------
 // The keyboard input is used for sending raw commands to
 // DCC-EX command station
 //---------------------------------------------------------

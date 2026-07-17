@@ -101,7 +101,8 @@ extern "C" {
 
 
 //--------------------------------------------------------
-// debug print macros
+// These functions acceess the UI elements inside ui_events.c
+// Hence they need C calling conventions.
 //--------------------------------------------------------
 extern void c_serial_print(const char* message);
 
@@ -118,6 +119,7 @@ extern void assignLocoToThrottle(int thr_idx, int loco_idx);
 extern void setDccFunc(int thr_idx, int func_num, int val);
 extern void gotoSleep();
 extern void setSignalAspect(uint8_t signal_idx, uint8_t aspect_val);
+extern void setLayoutBlockHighlight(uint16_t sensor_idx, bool active);
 
 #ifdef __cplusplus
 }
