@@ -28,8 +28,8 @@
 //--------------------------------------------------------
 #define POINTLEFT 0  //I define left and right as viewed from the point frog, change definition names to suit
 #define POINTRIGHT 1
-#define TURNOUTLEFT 0  //I define left and right as viewed from the point frog, change definition names to suit
-#define TURNOUTRIGHT 1
+#define TURNOUTCLOSED 0  
+#define TURNOUTTHROWN 1
 #define SIGST 0       //signal stop (red)
 #define SIGGO 1       //Green/yellow/ Go
 #define CROSSINGST 0  //crossing stop
@@ -42,8 +42,12 @@
 //--------------------------------------------------------
 // exported function
 //--------------------------------------------------------
-extern void interlock_update_sensor(uint16_t sensor_idx);
+extern void init_signal_interlock();
+
+extern void run_signal_interlock();
+
+extern void interlock_update_sensor(uint16_t sensor_addr, bool active);
 
 // turnout_index: index to turnoutList
 // thrown:  true if turnout was thrown, false if closed.
-extern void interlock_update_turnout(uint16_t turnout_index, bool thrown);
+extern void interlock_update_turnout(uint16_t turnout_addr, bool thrown);

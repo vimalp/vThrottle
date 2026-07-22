@@ -188,49 +188,24 @@ void getAvailLocoAddresses(uint32_t& num_avail, uint32_t* avail_loco_addresses)
 void updateTurnouts()
 {
   for (Turnout *tout = dccexProtocol.turnouts->getFirst(); tout; tout = tout->getNext()) {
-    int tid = tout->getId();
-    switch (tid) {
-      case DCC_TL0: { turnoutList[TURNOUT_TL0] = tid; }  break;
-      case DCC_TR0: { turnoutList[TURNOUT_TR0] = tid; }  break;
-      case DCC_TL2: { turnoutList[TURNOUT_TL2] = tid; }  break;
-      case DCC_TR2: { turnoutList[TURNOUT_TR2] = tid; }  break;
-      case DCC_XC:  { turnoutList[TURNOUT_XC]  = tid; }  break;
+    int dcc_addr = tout->getId();
+    switch (dcc_addr) {
+      case DCC_TL0: { turnoutList[TURNOUT_TL0] = dcc_addr; }  break;
+      case DCC_TR0: { turnoutList[TURNOUT_TR0] = dcc_addr; }  break;
+      case DCC_TL2: { turnoutList[TURNOUT_TL2] = dcc_addr; }  break;
+      case DCC_TR2: { turnoutList[TURNOUT_TR2] = dcc_addr; }  break;
+      case DCC_XC:  { turnoutList[TURNOUT_XC]  = dcc_addr; }  break;
       default:
-        Serial.printf("Error: Received unknown turnout -> %d\n", tid);
+        Serial.printf("Error: Received unknown turnout -> %d\n", dcc_addr);
         break;
     }
   }
 }
 
 //----------------------------------------------------------------------------
+// Update sensor list with sensor's dcc address
+// Also a check on DCC_BLK* values matching the command stations' addresses
 //----------------------------------------------------------------------------
-
-void updateSensors() 
-{
-  int s_idx = 0;
-  for (Sensor *s = dccexProtocol.sensors->getFirst(); s; s = s->getNext()) {
-    int s_addr = s->getId();
-    DEBUG_PRINTF("Got Sensor: %d\n", s_addr);
-
-    switch (s_addr) {
-      case  DCC_BLK0:  sensorList[0] = s_addr;   break; 
-      case  DCC_BLK1:  sensorList[1] = s_addr;   break; 
-      case  DCC_BLK2:  sensorList[2] = s_addr;   break; 
-      case  DCC_BLK3:  sensorList[3] = s_addr;   break; 
-      case  DCC_BLK4:  sensorList[4] = s_addr;   break; 
-      case  DCC_BLK5:  sensorList[5] = s_addr;   break; 
-      case  DCC_BLK6:  sensorList[6] = s_addr;   break; 
-      case  DCC_BLK7:  sensorList[7] = s_addr;   break; 
-      case  DCC_BLK8:  sensorList[8] = s_addr;   break; 
-      case  DCC_BLK9:  sensorList[9] = s_addr;   break; 
-      default:
-        DEBUG_PRINTF("Error: Received unknown sensor address = %d\n", s_addr);
-        break;
-    }
-  }
-}
-
-
 uint16_t get_sensor_index_from_addr(uint16_t sensor_addr)
 {
   switch (sensor_addr) {
@@ -247,6 +222,23 @@ uint16_t get_sensor_index_from_addr(uint16_t sensor_addr)
     default:
       DEBUG_PRINTF("Error: get_sensor_index_from_addr: unknown sensor address = %d\n", sensor_addr);
       break;
+  }
+  return NUM_BLOCK_SENSORS;
+}
+
+
+
+void updateSensors() 
+{
+  int s_idx = 0;
+  for (Sensor *s = dccexProtocol.sensors->getFirst(); s; s = s->getNext()) {
+    int s_addr = s->getId();
+    int s_idx = get_sensor_index_from_addr(s_addr);
+
+    if (s_idx < NUM_BLOCK_SENSORS) {
+      sensorList[s_idx] = s_addr;   
+      DEBUG_PRINTF("Got Sensor %d: add = %d\n", s_idx, s_addr);
+    }
   }
 }
 
@@ -291,7 +283,7 @@ void setDccTurnout(int turn_idx, int val)
     else
       dccexProtocol.closeTurnout(turnoutList[turn_idx]);
 
-    interlock_update_turnout(turn_idx, val);
+    interlock_update_turnout(turnoutList[turn_idx], val);
   }
 }
 

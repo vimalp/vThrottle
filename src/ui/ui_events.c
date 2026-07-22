@@ -285,19 +285,38 @@ void setSignalAspect(uint8_t signal_idx, uint8_t aspect_val)
 //---------------------------------------------------------
 
 #define OBJ_ADD_STATE_CONTAINER(b)	\
+		lv_obj_clear_state(ui_Blk ## b ## P0, old_state); \
+		lv_obj_clear_state(ui_Blk ## b ## P1, old_state); \
+		lv_obj_clear_state(ui_Blk ## b ## P2, old_state); \
 		lv_obj_add_state(ui_Blk ## b ## P0, blk_state);	\
 		lv_obj_add_state(ui_Blk ## b ## P1, blk_state);	\
 		lv_obj_add_state(ui_Blk ## b ## P2, blk_state);
 	
-
+static lv_state_t objCurState[NUM_BLOCK_SENSORS] = {
+	LV_STATE_DEFAULT,		// 0
+	LV_STATE_DEFAULT,
+	LV_STATE_DEFAULT,
+	LV_STATE_DEFAULT,
+	LV_STATE_DEFAULT,
+	LV_STATE_DEFAULT,		// 5
+	LV_STATE_DEFAULT,
+	LV_STATE_DEFAULT,
+	LV_STATE_DEFAULT,
+	LV_STATE_DEFAULT,
+	LV_STATE_DEFAULT
+};
 
 void setLayoutBlockHighlight(uint16_t sensor_idx, bool active)
 {
 	// set object state based on active. The object state will determine its style
+	lv_state_t old_state = objCurState[sensor_idx];
 	lv_state_t	blk_state = (active) ? LV_STATE_USER_1 : LV_STATE_DEFAULT;
+	snprintf(dbgStr, sizeof(dbgStr), "setLayoutBlockHighlight: sensor=%d, state=%d\n", sensor_idx, blk_state);
+	c_serial_print(dbgStr);
 
 	switch(sensor_idx) {
 		case 0:		
+			lv_obj_clear_state(ui_Block0, old_state);
 			lv_obj_add_state(ui_Block0, blk_state);		
 			break;
 		
@@ -310,6 +329,7 @@ void setLayoutBlockHighlight(uint16_t sensor_idx, bool active)
 			break;
 
 		case 3:
+			lv_obj_clear_state(ui_Block3, old_state);
 			lv_obj_add_state(ui_Block3, blk_state);		
 			break;
 
@@ -322,6 +342,7 @@ void setLayoutBlockHighlight(uint16_t sensor_idx, bool active)
 			break;
 
 		case 6:
+			lv_obj_clear_state(ui_Block6, old_state);
 			lv_obj_add_state(ui_Block6, blk_state);		
 			break;
 
@@ -334,11 +355,14 @@ void setLayoutBlockHighlight(uint16_t sensor_idx, bool active)
 			break;
 
 		case 9:
+			lv_obj_clear_state(ui_Block9, old_state);
 			lv_obj_add_state(ui_Block9, blk_state);		
 			break;
 
-		default: break;
+		default: return;
 	}
+
+	objCurState[sensor_idx] = blk_state;
 }
 
 //---------------------------------------------------------

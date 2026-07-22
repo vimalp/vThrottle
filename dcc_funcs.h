@@ -41,12 +41,24 @@
 #define TURNOUT_TR2     3
 #define TURNOUT_XC      4
 
+// contains dcc addresses of turnouts
 extern int16_t  turnoutList[NUM_TURNOUTS];
 
 //----------------------------------------------------------------
 // block occupancy sensor list
 // The DCC Addresses should match the ones in Command Station
 //----------------------------------------------------------------
+#define TOWN_LOOP_BLK0  0
+#define TOWN_LOOP_BLK1  1
+#define TOWN_LOOP_BLK2  2
+#define OUT1_LOOP_BLK3  3
+#define OUT1_LOOP_BLK4  4
+#define OUT1_LOOP_BLK5  5
+#define OUT2_LOOP_BLK6  6
+#define OUT2_LOOP_BLK7  7
+#define OUT2_LOOP_BLK8  8
+#define SIDEING_BLK9    9
+
 
 #define DCC_BLK0      108
 #define DCC_BLK1      109
@@ -59,7 +71,9 @@ extern int16_t  turnoutList[NUM_TURNOUTS];
 #define DCC_BLK8      105
 #define DCC_BLK9      112
 
-extern int16_t  sensorList[NUM_BLOCK_SENSORS];
+// constains dcc addresses (as above) of sensors
+
+extern uint16_t  sensorList[NUM_BLOCK_SENSORS];
 
 //----------------------------------------------------------------
 // Signal Head defines

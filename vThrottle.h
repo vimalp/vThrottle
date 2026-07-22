@@ -17,7 +17,7 @@
 #include <DCCEXProtocol.h>
 #include <WiFi.h>
 
-#include "interlock.h"
+#include "src/interlock/interlock.h"
 #include "signal_interlock.h"
 #include "dcc_funcs.h"
 

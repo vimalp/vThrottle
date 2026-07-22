@@ -46,7 +46,7 @@ Loco*         locoList[NUM_THROTTLES] ;
 int16_t       turnoutList[NUM_TURNOUTS];
 
 // block occupancy sensor list
-int16_t       sensorList[NUM_BLOCK_SENSORS];
+uint16_t      sensorList[NUM_BLOCK_SENSORS];
 
 
 //--------------------------------------------------------
@@ -238,7 +238,8 @@ void setup()
   delay(100);
 
   init_dcc_lists();
- 
+  init_signal_interlock();
+
   // load main ui screen
   lv_scr_load_anim(ui_Home, LV_SCR_LOAD_ANIM_MOVE_LEFT, 500, 0, false);
 
@@ -258,13 +259,12 @@ void init_dcc_lists()
   for (int tidx=0; tidx < NUM_TURNOUTS; ++tidx)       { turnoutList[tidx] = -1; }
   for (int sidx=0; sidx < NUM_BLOCK_SENSORS; ++sidx)  { sensorList[sidx] = -1; }
 
-
   // wait unti all lists are recieved.
   while (!dccexProtocol.receivedLists()) {
      // request loco roster list and turnout lists
-    dccexProtocol.getLists(true, true, false, false);
+    dccexProtocol.getLists(true, true, false, false, true);
     dccexProtocol.check();
-    delay(10);
+    delay(100);
   }
 
   // reset all turnouts to closed position
@@ -278,6 +278,9 @@ void init_dcc_lists()
     setDccSignal(sidx, signalHeads[sidx].aspect);
     delay(100);
   }
+
+  // get current sensor state
+  dccexProtocol.requestSensorStates();
 }
 
 //--------------------------------------------------------
@@ -285,8 +288,9 @@ void init_dcc_lists()
 
 void loop()
 {
-    // parse incoming messages
+  // parse incoming messages
   dccexProtocol.check();
+  run_signal_interlock();
 
   lv_timer_handler(); /* let the GUI do its work */
 
