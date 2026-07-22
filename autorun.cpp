@@ -2,7 +2,7 @@
 //
 // autorun.cpp
 //
-// function to run trains automatocally
+// function to run trains in auto mode.
 // 
 //
 // Vimal Parikh 
@@ -70,12 +70,14 @@ void updateLocoBlock(uint new_block_idx)
     Turnout* turnout = dccexProtocol.getTurnoutById(turnout_addr);
     prev_block_idx = (turnout->getThrown()) ? blockLayout[new_block_idx].blkIdxThrown 
                                             : blockLayout[new_block_idx].blkIdxClosed;
-    ASSERT_PRINTF(prev_block_idx != BLOCK_NONE);
+    ASSERT_PRINTF(prev_block_idx != BLOCK_NONE && "previous block is undefined");
   }
 
   if (prev_block_idx != BLOCK_NONE) {
     locoIdx = locoInBlock[prev_block_idx];
-    ASSERT_PRINTF(locoIdx != -1);
+    ASSERT_PRINTF(locoIdx != -1 && "No locomotive found in previous block");
+    ASSERT_PRINTF(locoInBlock[new_block_idx] == -1 && "New block is occupied for loco to move");
+
     if (locoIdx >= 0) {
       locoInBlock[prev_block_idx] = -1;
       locoInBlock[new_block_idx] = locoIdx;
