@@ -6,6 +6,7 @@
 #include "ui.h"
 #include <Arduino.h>
 #include "dcc_funcs.h"
+#include "autorun.h"
 
 static char dbgStr[80];
 
@@ -209,6 +210,29 @@ void setLocoFunc8(lv_event_t * e)
 }
 
 //---------------------------------------------------------
+// Assign starting block to each locomotive in roster
+//---------------------------------------------------------
+
+void setLocoBlk(lv_event_t * e)
+{
+	uint	loco_blk_idx;
+
+  // Get the starting block index for each loco index
+	for (uint lidx = 0; lidx < NUM_THROTTLES; ++lidx) {
+		switch (lidx) {
+			case 0: loco_blk_idx = lv_dropdown_get_selected(ui_Loco0BlkSel);	break;
+			case 1: loco_blk_idx = lv_dropdown_get_selected(ui_Loco1BlkSel);	break;
+  		case 2: loco_blk_idx = lv_dropdown_get_selected(ui_Loco2BlkSel);	break;
+			default:
+				snprintf(dbgStr, sizeof(dbgStr), "setLocoBlk: invalid loco index > %d\n", lidx);
+				c_serial_print(dbgStr);
+				return;
+		}
+		setLocoStartBlock(lidx, loco_blk_idx);
+	}
+}
+
+//---------------------------------------------------------
 //---------------------------------------------------------
 #if 0
 
@@ -302,15 +326,22 @@ static lv_state_t objCurState[NUM_BLOCK_SENSORS] = {
 	LV_STATE_DEFAULT,
 	LV_STATE_DEFAULT,
 	LV_STATE_DEFAULT,
-	LV_STATE_DEFAULT,
 	LV_STATE_DEFAULT
 };
+
+static lv_state_t locoStateIdx[NUM_THROTTLES] = {
+	LV_STATE_USER_1, 
+	LV_STATE_USER_2, 
+	LV_STATE_USER_3
+};
+
 
 void setLayoutBlockHighlight(uint16_t sensor_idx, bool active)
 {
 	// set object state based on active. The object state will determine its style
 	lv_state_t old_state = objCurState[sensor_idx];
-	lv_state_t	blk_state = (active) ? LV_STATE_USER_1 : LV_STATE_DEFAULT;
+	int locoIdx = locoInBlock[sensor_idx];
+	lv_state_t	blk_state = (active) ? locoStateIdx[locoIdx] : LV_STATE_DEFAULT;
 	snprintf(dbgStr, sizeof(dbgStr), "setLayoutBlockHighlight: sensor=%d, state=%d\n", sensor_idx, blk_state);
 	c_serial_print(dbgStr);
 
@@ -386,7 +417,6 @@ void powerOff(lv_event_t * e)
 {
 	gotoSleep();
 }
-
 
 
 

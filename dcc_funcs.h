@@ -40,6 +40,7 @@
 #define TURNOUT_TL2     2
 #define TURNOUT_TR2     3
 #define TURNOUT_XC      4
+#define TURNOUT_NONE    NUM_TURNOUTS
 
 // contains dcc addresses of turnouts
 extern int16_t  turnoutList[NUM_TURNOUTS];
@@ -58,7 +59,7 @@ extern int16_t  turnoutList[NUM_TURNOUTS];
 #define OUT2_LOOP_BLK7  7
 #define OUT2_LOOP_BLK8  8
 #define SIDEING_BLK9    9
-
+#define BLOCK_NONE      NUM_BLOCK_SENSORS
 
 #define DCC_BLK0      108
 #define DCC_BLK1      109
@@ -130,6 +131,7 @@ extern void sendDccExCmd(const char* cmd_str);
 extern void setLocoList(int thr_idx, int loco_idx, const char* name, uint32_t addr);
 extern void selectLoco(int thr_idx, int loco_idx);
 extern void assignLocoToThrottle(int thr_idx, int loco_idx);
+extern void setLocoStartBlock(uint loco_idx, uint start_blk_idx);
 extern void setDccFunc(int thr_idx, int func_num, int val);
 extern void gotoSleep();
 extern void setSignalAspect(uint8_t signal_idx, uint8_t aspect_val);

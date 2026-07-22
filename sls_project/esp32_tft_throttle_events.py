@@ -106,3 +106,7 @@ def setLocoFunc11(event_struct):
 def setLocoFunc8(event_struct):
     return
 
+
+def setLocoBlk(event_struct):
+    return
+
