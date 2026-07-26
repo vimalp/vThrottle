@@ -12,34 +12,8 @@
 // **************************************************************************
 //
 #include "vThrottle.h"
+#include "signal_handler.h"
 
-
-//------------------------------------------------------------------
-// Signal head addresses and aspect values
-// Following dccaddresses are defined for signals in CommandStation's myautomatioh.h
-// Addresses must match.
-//------------------------------------------------------------------
-
-signalHead_t signalHeads[NUM_SIGNAL_HEADS] = 
-{
-  {400, ASPECT_GREEN},    // DCC_SHL0C
-  {401, ASPECT_GREEN},    // DCC_SHL1TC,
-  {402, ASPECT_RED},      // DCC_SHL1TD,
-  {403, ASPECT_GREEN},    // DCC_SHL2C,
-  {404, ASPECT_RED},      // DCC_SHL2D,
-  {405, ASPECT_GREEN},    // DCC_SHR0TC,
-  {406, ASPECT_RED},      // DCC_SHR0TD,
-  {407, ASPECT_GREEN},    // DCC_SHR1C,
-  {408, ASPECT_GREEN},    // DCC_SHR2TC,
-  {409, ASPECT_RED}       // DCC_SHR2TD
-};
-
-uint32_t AspectCols[NUM_SIGNAL_ASPECTS] = {
-  0x000000,     // 0 - dark
-  0xff0000,     // 1 - Red
-  0xffff00,     // 2 - yellow
-  0x00ff00      // 3 - green
-};
 
 //------------------------------------------------------------------
 // Print function for ui_events.c
@@ -220,7 +194,7 @@ uint16_t get_sensor_index_from_addr(uint16_t sensor_addr)
     case  DCC_BLK8:  return 8;
     case  DCC_BLK9:  return 9;
     default:
-      DEBUG_PRINTF("Error: get_sensor_index_from_addr: unknown sensor address = %d\n", sensor_addr);
+      //DEBUG_PRINTF("Error: get_sensor_index_from_addr: unknown sensor address = %d\n", sensor_addr);
       break;
   }
   return NUM_BLOCK_SENSORS;
@@ -278,37 +252,14 @@ void setDccTurnout(int turn_idx, int val)
 {
   char  cmdStr[20];
   if (turn_idx >= 0 && turn_idx < NUM_TURNOUTS && (turnoutList[turn_idx] > 0)) {
+    DEBUG_PRINTF("setDCCTurnout[%d] = %x\n", turn_idx, turnoutList[turn_idx]);
     if (val) 
       dccexProtocol.throwTurnout(turnoutList[turn_idx]);
     else
       dccexProtocol.closeTurnout(turnoutList[turn_idx]);
-
-    interlock_update_turnout(turnoutList[turn_idx], val);
   }
 }
 
-//----------------------------------------------------------------------------
-// Set signal head aspect for given signal head
-//----------------------------------------------------------------------------
-
-void setDccSignal(int signal_idx, uint8_t aspect_val)
-{
-  char    cmdStr[40];
-
-  if (signal_idx >= NUM_SIGNAL_HEADS) {
-    DEBUG_PRINTF("Got invalid signal index: %d\n", signal_idx);
-    return;
-  }
-
-  if (aspect_val >= NUM_SIGNAL_ASPECTS)
-    aspect_val = ASPECT_DARK;
-
-  signalHeads[signal_idx].aspect = aspect_val;
-
-  snprintf(cmdStr, sizeof(cmdStr), "A %d %d", signalHeads[signal_idx].dccAddr, aspect_val);
-  dccexProtocol.sendCommand(cmdStr);  
-  setSignalAspect(signal_idx, aspect_val);
-}
 
 //----------------------------------------------------------------------------
 // Send a raw command packet to DCC-EX

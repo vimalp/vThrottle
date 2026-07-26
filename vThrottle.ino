@@ -18,6 +18,7 @@
 #include <lvgl.h>
 #include <stdbool.h>
 #include "src/ui/ui.h"
+#include "signal_handler.h"
 #include "delegate.h"
 
 //----------------------------------------------------------
@@ -46,7 +47,7 @@ Loco*         locoList[NUM_THROTTLES] ;
 int16_t       turnoutList[NUM_TURNOUTS];
 
 // block occupancy sensor list
-uint16_t      sensorList[NUM_BLOCK_SENSORS];
+int16_t       sensorList[NUM_BLOCK_SENSORS];
 
 
 //--------------------------------------------------------
@@ -233,12 +234,8 @@ void setup()
   dccexProtocol.setDebug(_DEBUG_ ? true : false);
   DEBUG_PRINTF("DCC-EX connected");
 
-   // reset the HAL (i.e. serial interface etc)
-  dccexProtocol.sendCommand("D HAL RESET");
-  delay(100);
-
   init_dcc_lists();
-  init_signal_interlock();
+  update_signals();
 
   // load main ui screen
   lv_scr_load_anim(ui_Home, LV_SCR_LOAD_ANIM_MOVE_LEFT, 500, 0, false);
@@ -267,20 +264,22 @@ void init_dcc_lists()
     delay(100);
   }
 
+  init_signal_handler();
+
   // reset all turnouts to closed position
+  DEBUG_PRINTF("Setting Turnouts to default state:\n");
   for (int tidx=0; tidx < NUM_TURNOUTS; ++tidx) {
     setDccTurnout(tidx, 0);
     delay(100);
   }
 
-  // set initial state of all signal heads
-  for (int sidx = 0; sidx < NUM_SIGNAL_HEADS; ++sidx) {
-    setDccSignal(sidx, signalHeads[sidx].aspect);
-    delay(100);
-  }
+   // reset the HAL (i.e. serial interface etc)
+  dccexProtocol.sendCommand("D HAL RESET");
+  delay(100);
 
   // get current sensor state
   dccexProtocol.requestSensorStates();
+  delay(100);
 }
 
 //--------------------------------------------------------
@@ -290,7 +289,6 @@ void loop()
 {
   // parse incoming messages
   dccexProtocol.check();
-  run_signal_interlock();
 
   lv_timer_handler(); /* let the GUI do its work */
 
