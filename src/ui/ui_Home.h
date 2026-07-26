@@ -84,6 +84,9 @@ extern lv_obj_t *ui_Label1;
 extern lv_obj_t *ui_MenuPanel;
 extern void ui_event_DccExBtn( lv_event_t * e);
 extern lv_obj_t *ui_DccExBtn;
+extern void ui_event_HalReset( lv_event_t * e);
+extern lv_obj_t *ui_HalReset;
+extern lv_obj_t *ui_HalResetLabel;
 extern void ui_event_LocoIdBtn( lv_event_t * e);
 extern lv_obj_t *ui_LocoIdBtn;
 extern lv_obj_t *ui_LocoIdLabel;
@@ -111,6 +114,7 @@ extern lv_obj_t *ui_dccexCmdText;
 extern void ui_event_keyboardClose( lv_event_t * e);
 extern lv_obj_t *ui_keyboardClose;
 extern lv_obj_t *ui_CloseLabel;
+extern lv_obj_t *ui_version;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

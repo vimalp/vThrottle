@@ -126,6 +126,6 @@ void SignalHandler::updateSignal()
   {
     char  cmdStr[20];
     snprintf(cmdStr, sizeof(cmdStr), "A %d %d", _signalId, aspect);
-    dccexProtocol.sendCommand(cmdStr);  
+    sendDccExCmd(cmdStr);  
     setSignalAspect(_signalId, _aspectColors[aspect]);      
   };

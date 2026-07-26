@@ -22,6 +22,7 @@ void setLocoFunc3(lv_event_t * e);
 void setLocoFunc7(lv_event_t * e);
 void setLocoFunc11(lv_event_t * e);
 void setLocoFunc8(lv_event_t * e);
+void resetHal(lv_event_t * e);
 void showRoutes(lv_event_t * e);
 void setLocoBlk(lv_event_t * e);
 void getKeyboardText(lv_event_t * e);

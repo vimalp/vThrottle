@@ -407,6 +407,7 @@ void powerOff(lv_event_t * e)
 }
 
 
-
-
-
+void resetHal(lv_event_t * e)
+{
+		sendDccExCmd("D HAL RESET");
+}

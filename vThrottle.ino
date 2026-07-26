@@ -239,7 +239,8 @@ void setup()
 
   // load main ui screen
   lv_scr_load_anim(ui_Home, LV_SCR_LOAD_ANIM_MOVE_LEFT, 500, 0, false);
-
+  lv_label_set_text(ui_version, VERSION);
+  
   Serial.println( "Setup done" );
 }
 
