@@ -252,11 +252,11 @@ void setTurnOut(lv_event_t * e)
 // aspect. 
 //-------------------------------------------------------------
 
-void setSignalAspect(uint8_t signal_idx, uint8_t aspect_val)
+void setSignalAspect(enum SignalIds_e signal_id, uint32_t aspect_col)
 {
 	lv_obj_t* signalObj = NULL;
 
-	switch (signal_idx) {
+	switch (signal_id) {
 		case SIGNAL_SHL0C:	signalObj = ui_SHL0C;		break;
 		case SIGNAL_SHL1TC:	signalObj = ui_SHL1TC;		break;
 		case SIGNAL_SHL1TD:	signalObj = ui_SHL1TD;		break;
@@ -271,8 +271,8 @@ void setSignalAspect(uint8_t signal_idx, uint8_t aspect_val)
 	}
 	if (!signalObj) return;
 
-  lv_color_t aspect_color = lv_color_hex(AspectCols[aspect_val]);
-  lv_obj_set_style_bg_color(signalObj, aspect_color, LV_PART_MAIN);
+  lv_color_t objColor = lv_color_hex(aspect_col);
+  lv_obj_set_style_bg_color(signalObj, objColor, LV_PART_MAIN);
 }
 
 //---------------------------------------------------------

@@ -16,15 +16,12 @@
 
 #include <DCCEXProtocol.h>
 #include <WiFi.h>
-
-#include "src/interlock/interlock.h"
-#include "signal_interlock.h"
 #include "dcc_funcs.h"
-
 
 #define _DEBUG_   1
 #define DEBUG_PRINTF      if (_DEBUG_) Serial.printf
 
+#define VERSION "1.5.0"
 //--------------------------------------------------------
 // I2C Addresses
 //--------------------------------------------------------
