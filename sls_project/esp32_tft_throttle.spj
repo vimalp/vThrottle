@@ -7468,7 +7468,6 @@
                       },
                       {
                         "nid": 320,
-                        "flags": 1048576,
                         "strtype": "OBJECT/States",
                         "InheritedType": 1
                       },
@@ -7544,6 +7543,82 @@
                               },
                               {
                                 "nid": 120720,
+                                "strtype": "_style/Border width",
+                                "integer": 1,
+                                "InheritedType": 6
+                              }
+                            ],
+                            "InheritedType": 1
+                          },
+                          {
+                            "nid": 130000,
+                            "strtype": "_style/StyleState",
+                            "strval": "USER_2",
+                            "childs": [
+                              {
+                                "nid": 130520,
+                                "flags": 4096,
+                                "strtype": "_style/Bg_Color",
+                                "intarray": [
+                                  96,
+                                  255,
+                                  96,
+                                  255
+                                ],
+                                "InheritedType": 7
+                              },
+                              {
+                                "nid": 130710,
+                                "flags": 4096,
+                                "strtype": "_style/Border_Color",
+                                "intarray": [
+                                  96,
+                                  255,
+                                  96,
+                                  255
+                                ],
+                                "InheritedType": 7
+                              },
+                              {
+                                "nid": 130720,
+                                "strtype": "_style/Border width",
+                                "integer": 1,
+                                "InheritedType": 6
+                              }
+                            ],
+                            "InheritedType": 1
+                          },
+                          {
+                            "nid": 140000,
+                            "strtype": "_style/StyleState",
+                            "strval": "USER_3",
+                            "childs": [
+                              {
+                                "nid": 140520,
+                                "flags": 4096,
+                                "strtype": "_style/Bg_Color",
+                                "intarray": [
+                                  64,
+                                  64,
+                                  255,
+                                  255
+                                ],
+                                "InheritedType": 7
+                              },
+                              {
+                                "nid": 140710,
+                                "flags": 4096,
+                                "strtype": "_style/Border_Color",
+                                "intarray": [
+                                  64,
+                                  64,
+                                  255,
+                                  255
+                                ],
+                                "InheritedType": 7
+                              },
+                              {
+                                "nid": 140720,
                                 "strtype": "_style/Border width",
                                 "integer": 1,
                                 "InheritedType": 6
@@ -7675,7 +7750,6 @@
                       },
                       {
                         "nid": 320,
-                        "flags": 1048576,
                         "strtype": "OBJECT/States",
                         "InheritedType": 1
                       },
@@ -7751,6 +7825,82 @@
                               },
                               {
                                 "nid": 120720,
+                                "strtype": "_style/Border width",
+                                "integer": 1,
+                                "InheritedType": 6
+                              }
+                            ],
+                            "InheritedType": 1
+                          },
+                          {
+                            "nid": 130000,
+                            "strtype": "_style/StyleState",
+                            "strval": "USER_2",
+                            "childs": [
+                              {
+                                "nid": 130520,
+                                "flags": 4096,
+                                "strtype": "_style/Bg_Color",
+                                "intarray": [
+                                  96,
+                                  255,
+                                  96,
+                                  255
+                                ],
+                                "InheritedType": 7
+                              },
+                              {
+                                "nid": 130710,
+                                "flags": 4096,
+                                "strtype": "_style/Border_Color",
+                                "intarray": [
+                                  96,
+                                  255,
+                                  96,
+                                  255
+                                ],
+                                "InheritedType": 7
+                              },
+                              {
+                                "nid": 130720,
+                                "strtype": "_style/Border width",
+                                "integer": 1,
+                                "InheritedType": 6
+                              }
+                            ],
+                            "InheritedType": 1
+                          },
+                          {
+                            "nid": 140000,
+                            "strtype": "_style/StyleState",
+                            "strval": "USER_3",
+                            "childs": [
+                              {
+                                "nid": 140520,
+                                "flags": 4096,
+                                "strtype": "_style/Bg_Color",
+                                "intarray": [
+                                  64,
+                                  64,
+                                  255,
+                                  255
+                                ],
+                                "InheritedType": 7
+                              },
+                              {
+                                "nid": 140710,
+                                "flags": 4096,
+                                "strtype": "_style/Border_Color",
+                                "intarray": [
+                                  64,
+                                  64,
+                                  255,
+                                  255
+                                ],
+                                "InheritedType": 7
+                              },
+                              {
+                                "nid": 140720,
                                 "strtype": "_style/Border width",
                                 "integer": 1,
                                 "InheritedType": 6
@@ -7882,7 +8032,6 @@
                       },
                       {
                         "nid": 320,
-                        "flags": 1048576,
                         "strtype": "OBJECT/States",
                         "InheritedType": 1
                       },
@@ -48459,7 +48608,7 @@
                     "strtype": "OBJECT/Position",
                     "intarray": [
                       30,
-                      -40
+                      -60
                     ],
                     "InheritedType": 7
                   },
@@ -48469,7 +48618,7 @@
                     "strtype": "OBJECT/Size",
                     "intarray": [
                       90,
-                      20
+                      30
                     ],
                     "InheritedType": 7
                   },
@@ -48545,7 +48694,7 @@
                   {
                     "nid": 1020,
                     "strtype": "DROPDOWN/Options",
-                    "strval": "BLK 0\\nBLK 1\\nBLK 2\\nBLK 3\\nBLK 4\\nBLK 5\\nBLK 6\\nBLK 7\\nBLK 8\\nBLK 9",
+                    "strval": "\\nBLK 0\\nBLK 1\\nBLK 2\\nBLK 3\\nBLK 4\\nBLK 5\\nBLK 6\\nBLK 7\\nBLK 8\\nBLK 9",
                     "InheritedType": 10
                   },
                   {
@@ -48629,7 +48778,7 @@
                             "intarray": [
                               10,
                               10,
-                              0,
+                              5,
                               0
                             ],
                             "InheritedType": 7
@@ -48883,7 +49032,7 @@
                     "strtype": "OBJECT/Position",
                     "intarray": [
                       30,
-                      -10
+                      -20
                     ],
                     "InheritedType": 7
                   },
@@ -48893,7 +49042,7 @@
                     "strtype": "OBJECT/Size",
                     "intarray": [
                       88,
-                      20
+                      30
                     ],
                     "InheritedType": 7
                   },
@@ -48969,7 +49118,7 @@
                   {
                     "nid": 1020,
                     "strtype": "DROPDOWN/Options",
-                    "strval": "BLK 0\\nBLK 1\\nBLK 2\\nBLK 3\\nBLK 4\\nBLK 5\\nBLK 6\\nBLK 7\\nBLK 8\\nBLK 9",
+                    "strval": "\\nBLK 0\\nBLK 1\\nBLK 2\\nBLK 3\\nBLK 4\\nBLK 5\\nBLK 6\\nBLK 7\\nBLK 8\\nBLK 9",
                     "InheritedType": 10
                   },
                   {
@@ -49053,7 +49202,7 @@
                             "intarray": [
                               10,
                               10,
-                              0,
+                              5,
                               0
                             ],
                             "InheritedType": 7
@@ -49296,7 +49445,7 @@
                     "strtype": "OBJECT/Size",
                     "intarray": [
                       88,
-                      20
+                      30
                     ],
                     "InheritedType": 7
                   },
@@ -49372,7 +49521,7 @@
                   {
                     "nid": 1020,
                     "strtype": "DROPDOWN/Options",
-                    "strval": "BLK 0\\nBLK 1\\nBLK 2\\nBLK 3\\nBLK 4\\nBLK 5\\nBLK 6\\nBLK 7\\nBLK 8\\nBLK 9",
+                    "strval": "\\nBLK 0\\nBLK 1\\nBLK 2\\nBLK 3\\nBLK 4\\nBLK 5\\nBLK 6\\nBLK 7\\nBLK 8\\nBLK 9",
                     "InheritedType": 10
                   },
                   {
@@ -49456,7 +49605,7 @@
                             "intarray": [
                               10,
                               10,
-                              0,
+                              5,
                               0
                             ],
                             "InheritedType": 7
@@ -49729,7 +49878,7 @@
                     "strtype": "OBJECT/Position",
                     "intarray": [
                       0,
-                      65
+                      66
                     ],
                     "InheritedType": 7
                   },
@@ -50064,7 +50213,7 @@
                     "strtype": "OBJECT/Position",
                     "intarray": [
                       30,
-                      -65
+                      -85
                     ],
                     "InheritedType": 7
                   },
@@ -50208,7 +50357,7 @@
                 "strtype": "OBJECT/Position",
                 "intarray": [
                   135,
-                  40
+                  39
                 ],
                 "InheritedType": 7
               },
@@ -50218,7 +50367,7 @@
                 "strtype": "OBJECT/Size",
                 "intarray": [
                   176,
-                  180
+                  200
                 ],
                 "InheritedType": 7
               },
@@ -51832,7 +51981,7 @@
     "separate_screen_save": false,
     "hierarchy_state_save": false,
     "reverse_event_order": false,
-    "backup_cnt": 105,
+    "backup_cnt": 108,
     "autosave_cnt": 0,
     "group_color_cnt": 3,
     "imagebytearrayprefix": "",

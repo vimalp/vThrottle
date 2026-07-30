@@ -110,3 +110,7 @@ def setLocoFunc8(event_struct):
 def setLocoBlk(event_struct):
     return
 
+
+def resetHal(event_struct):
+    return
+

@@ -215,20 +215,25 @@ void setLocoFunc8(lv_event_t * e)
 
 void setLocoBlk(lv_event_t * e)
 {
-	uint	loco_blk_idx;
+	int	loco_blk_idx;
 
   // Get the starting block index for each loco index
 	for (uint lidx = 0; lidx < NUM_THROTTLES; ++lidx) {
 		switch (lidx) {
-			case 0: loco_blk_idx = lv_dropdown_get_selected(ui_Loco0BlkSel);	break;
-			case 1: loco_blk_idx = lv_dropdown_get_selected(ui_Loco1BlkSel);	break;
-  		case 2: loco_blk_idx = lv_dropdown_get_selected(ui_Loco2BlkSel);	break;
+			// Subtract 1 from dropdown selection as the first entry is null (no loco)
+			case 0: loco_blk_idx = lv_dropdown_get_selected(ui_Loco0BlkSel) - 1;	break;
+			case 1: loco_blk_idx = lv_dropdown_get_selected(ui_Loco1BlkSel) - 1;	break;
+  		case 2: loco_blk_idx = lv_dropdown_get_selected(ui_Loco2BlkSel) - 1;	break;
 			default:
 				snprintf(dbgStr, sizeof(dbgStr), "setLocoBlk: invalid loco index > %d\n", lidx);
 				c_serial_print(dbgStr);
 				return;
 		}
-		setLocoStartBlock(lidx, loco_blk_idx);
+		
+		if (loco_blk_idx >= 0) {
+			setLocoStartBlock(lidx, loco_blk_idx);
+			setLayoutBlockHighlight(loco_blk_idx, true);
+		}
 	}
 }
 
@@ -329,8 +334,8 @@ void setLayoutBlockHighlight(uint16_t sensor_idx, bool active)
 	// set object state based on active. The object state will determine its style
 	lv_state_t old_state = objCurState[sensor_idx];
 	int locoIdx = locoInBlock[sensor_idx];
-	lv_state_t	blk_state = (active) ? locoStateIdx[locoIdx] : LV_STATE_DEFAULT;
-	snprintf(dbgStr, sizeof(dbgStr), "setLayoutBlockHighlight: sensor=%d, state=%d\n", sensor_idx, blk_state);
+	lv_state_t	blk_state = (active && locoIdx >= 0) ? locoStateIdx[locoIdx] : LV_STATE_DEFAULT;
+	snprintf(dbgStr, sizeof(dbgStr), "setLayoutBlockHighlight: sensor=%d, loco=%d, state=%d\n", sensor_idx, locoIdx, blk_state);
 	c_serial_print(dbgStr);
 
 	switch(sensor_idx) {

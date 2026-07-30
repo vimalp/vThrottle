@@ -62,7 +62,8 @@ class MyDelegate : public DCCEXProtocolDelegate
       uint16_t sensor_idx = get_sensor_index_from_addr(sensor_addr);
       DEBUG_PRINTF("\nReceived Sensor %d State: addr=%d, val=%d\n", sensor_idx, sensor_addr, active);
       if (sensor_idx < NUM_BLOCK_SENSORS) {
-        updateLocoBlock(sensor_idx);
+        if (active) 
+            updateLocoBlock(sensor_idx);
         setLayoutBlockHighlight(sensor_idx, active);
         update_signals();
       }

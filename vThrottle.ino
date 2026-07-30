@@ -231,11 +231,10 @@ void setup()
   // Pass the communication to wiThrottleProtocol
   dccexProtocol.connect(&client);
   dccexProtocol.setDelegate(&dccexDelegate);
-  dccexProtocol.setDebug(_DEBUG_ ? true : false);
+  //dccexProtocol.setDebug(_DEBUG_ ? true : false);
   DEBUG_PRINTF("DCC-EX connected");
 
   init_dcc_lists();
-  update_signals();
 
   // load main ui screen
   lv_scr_load_anim(ui_Home, LV_SCR_LOAD_ANIM_MOVE_LEFT, 500, 0, false);
@@ -275,12 +274,12 @@ void init_dcc_lists()
   }
 
    // reset the HAL (i.e. serial interface etc)
-  dccexProtocol.sendCommand("D HAL RESET");
-  delay(100);
+  sendDccExCmd("D HAL RESET");
+  delay(500);
 
   // get current sensor state
-  dccexProtocol.requestSensorStates();
-  delay(100);
+  //dccexProtocol.requestSensorStates();
+  //delay(500);
 }
 
 //--------------------------------------------------------
