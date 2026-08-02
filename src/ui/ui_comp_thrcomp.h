@@ -19,33 +19,46 @@ extern "C" {
 #define UI_COMP_THRCOMP_LOCONAME 3
 #define UI_COMP_THRCOMP_LOCOREV 4
 #define UI_COMP_THRCOMP_HORN 5
-#define UI_COMP_THRCOMP_FUNCBUTTON 6
-#define UI_COMP_THRCOMP_FUNCBUTTON_FUNCLABEL 7
-#define UI_COMP_THRCOMP_FUNCPANEL 8
-#define UI_COMP_THRCOMP_FUNCPANEL_HEADLIGHTF0 9
-#define UI_COMP_THRCOMP_FUNCPANEL_HEADLIGHTF0_LABELF0 10
-#define UI_COMP_THRCOMP_FUNCPANEL_COUPLERF3 11
-#define UI_COMP_THRCOMP_FUNCPANEL_COUPLERF3_LABELF3 12
-#define UI_COMP_THRCOMP_FUNCPANEL_FLANGEF7 13
-#define UI_COMP_THRCOMP_FUNCPANEL_FLANGEF7_LABELF7 14
-#define UI_COMP_THRCOMP_FUNCPANEL_RADIATORF11 15
-#define UI_COMP_THRCOMP_FUNCPANEL_RADIATORF11_LABELF11 16
-#define UI_COMP_THRCOMP_FUNCPANEL_FUNCPANELCLOSE 17
-#define UI_COMP_THRCOMP_FUNCPANEL_FUNCPANELCLOSE_LABELCLOSE 18
+#define UI_COMP_THRCOMP_ROUTEBTN 6
+#define UI_COMP_THRCOMP_ROUTEBTN_ROUTELABEL 7
+#define UI_COMP_THRCOMP_FUNCBUTTON 8
+#define UI_COMP_THRCOMP_FUNCBUTTON_FUNCLABEL 9
+#define UI_COMP_THRCOMP_FUNCPANEL 10
+#define UI_COMP_THRCOMP_FUNCPANEL_HEADLIGHTF0 11
+#define UI_COMP_THRCOMP_FUNCPANEL_HEADLIGHTF0_LABELF0 12
+#define UI_COMP_THRCOMP_FUNCPANEL_COUPLERF3 13
+#define UI_COMP_THRCOMP_FUNCPANEL_COUPLERF3_LABELF3 14
+#define UI_COMP_THRCOMP_FUNCPANEL_FLANGEF7 15
+#define UI_COMP_THRCOMP_FUNCPANEL_FLANGEF7_LABELF7 16
+#define UI_COMP_THRCOMP_FUNCPANEL_RADIATORF11 17
+#define UI_COMP_THRCOMP_FUNCPANEL_RADIATORF11_LABELF11 18
 #define UI_COMP_THRCOMP_FUNCPANEL_MASTERSOUNDF8 19
-#define _UI_COMP_THRCOMP_NUM 20
+#define UI_COMP_THRCOMP_FUNCPANEL_FUNCPANELCLOSE 20
+#define UI_COMP_THRCOMP_ROUTEPANEL 21
+#define UI_COMP_THRCOMP_ROUTEPANEL_STARTBLOCK 22
+#define UI_COMP_THRCOMP_ROUTEPANEL_STARTBLOCK_STARTBLK 23
+#define UI_COMP_THRCOMP_ROUTEPANEL_ROUTESEL 24
+#define UI_COMP_THRCOMP_ROUTEPANEL_ROUTESEL_LABEL2 25
+#define UI_COMP_THRCOMP_ROUTEPANEL_ROUTESTART 26
+#define UI_COMP_THRCOMP_ROUTEPANEL_ROUTESTART_ROUTEBTNLABEL 27
+#define UI_COMP_THRCOMP_ROUTEPANEL_ROUTECLOSE 28
+#define _UI_COMP_THRCOMP_NUM 29
 lv_obj_t *ui_ThrComp_create(lv_obj_t *comp_parent);
 void ui_event_comp_ThrComp_LocoThr( lv_event_t * e);
 void ui_event_comp_ThrComp_LocoName( lv_event_t * e);
 void ui_event_comp_ThrComp_LocoRev( lv_event_t * e);
 void ui_event_comp_ThrComp_horn( lv_event_t * e);
+void ui_event_comp_ThrComp_RouteBtn( lv_event_t * e);
 void ui_event_comp_ThrComp_FuncButton( lv_event_t * e);
 void ui_event_comp_ThrComp_HeadLightF0( lv_event_t * e);
 void ui_event_comp_ThrComp_CouplerF3( lv_event_t * e);
 void ui_event_comp_ThrComp_FlangeF7( lv_event_t * e);
 void ui_event_comp_ThrComp_RadiatorF11( lv_event_t * e);
-void ui_event_comp_ThrComp_FuncPanelClose( lv_event_t * e);
 void ui_event_comp_ThrComp_MasterSoundF8( lv_event_t * e);
+void ui_event_comp_ThrComp_FuncPanelClose( lv_event_t * e);
+void ui_event_comp_ThrComp_StartBlock( lv_event_t * e);
+void ui_event_comp_ThrComp_RouteStart( lv_event_t * e);
+void ui_event_comp_ThrComp_RouteClose( lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

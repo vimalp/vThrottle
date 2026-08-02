@@ -260,6 +260,35 @@ void setDccTurnout(int turn_idx, int val)
   }
 }
 
+//----------------------------------------------------------------------------
+// Send a raw command packet to DCC-EX
+//----------------------------------------------------------------------------
+
+void startDccRoute(int thr_index, int route_index)
+{
+  int ridx = 0;
+	Route* route; 
+	for (route = dccexProtocol.routes->getFirst(); route; route = route->getNext()) {
+		if (ridx++ == route_index) break;
+	}
+  int route_id = route->getId();
+  int loco_addr  = locoList[thr_index]->getAddress();
+  	
+  dccexProtocol.handOffLoco(loco_addr, route_id);
+}
+
+void stopDccRoute(int route_index)
+{
+  char cmdStr[40];
+  int ridx = 0;
+	Route* route; 
+	for (route = dccexProtocol.routes->getFirst(); route; route = route->getNext()) {
+		if (ridx++ == route_index) break;
+	}
+  int route_id = route->getId();
+  snprintf(cmdStr, sizeof(cmdStr), "/ KILL %d", route_id);
+  sendDccExCmd(cmdStr);
+}
 
 //----------------------------------------------------------------------------
 // Send a raw command packet to DCC-EX

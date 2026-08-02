@@ -18,7 +18,7 @@
 #include <WiFi.h>
 #include "dcc_funcs.h"
 
-#define VERSION "1.5.0"
+#define VERSION "vThrottle (1.5.0)"
 
 #define _DEBUG_   1
 #define DEBUG_PRINTF      if (_DEBUG_) Serial.printf

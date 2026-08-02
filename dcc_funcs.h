@@ -21,7 +21,7 @@
 #define NUM_TURNOUTS         5
 #define NUM_BLOCK_SENSORS   10
 #define NUM_SIGNAL_HEADS    10
-
+#define MAX_NUM_ROUTES      10
 
 //----------------------------------------------------------------
 // Turnout defines
@@ -127,6 +127,8 @@ extern void setDccFunc(int thr_idx, int func_num, int val);
 extern void gotoSleep();
 extern void setSignalAspect(enum SignalIds_e signal_id, uint32_t aspect_col);
 extern void setLayoutBlockHighlight(uint16_t sensor_idx, bool active);
+extern void startDccRoute(int thr_index, int route_index);
+extern void stopDccRoute(int route_index);
 
 #ifdef __cplusplus
 }

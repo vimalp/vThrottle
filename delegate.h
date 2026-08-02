@@ -43,7 +43,15 @@ class MyDelegate : public DCCEXProtocolDelegate
     }
 
     //-------------------------------------------------------
+    // Route list
+    //-------------------------------------------------------
+    void receivedRouteList() override {
+      DEBUG_PRINTF("Received Route List\n");
+    }
+
+    //-------------------------------------------------------
     // Sensor List updates
+    //-------------------------------------------------------
     void receivedSensorList() override {
       int sensorCnt = dccexProtocol.getSensorCount();
       DEBUG_PRINTF("\nReceived Sensor List: Number of sensors=%d\n", sensorCnt);

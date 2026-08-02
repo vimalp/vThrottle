@@ -209,41 +209,8 @@ void setLocoFunc8(lv_event_t * e)
 	setLocoFunc(e, 8, LV_STATE_CHECKED);
 }
 
-//---------------------------------------------------------
-// Assign starting block to each locomotive in roster
-//---------------------------------------------------------
 
-void setLocoBlk(lv_event_t * e)
-{
-	int	loco_blk_idx;
 
-  // Get the starting block index for each loco index
-	for (uint lidx = 0; lidx < NUM_THROTTLES; ++lidx) {
-		switch (lidx) {
-			// Subtract 1 from dropdown selection as the first entry is null (no loco)
-			case 0: loco_blk_idx = lv_dropdown_get_selected(ui_Loco0BlkSel) - 1;	break;
-			case 1: loco_blk_idx = lv_dropdown_get_selected(ui_Loco1BlkSel) - 1;	break;
-  		case 2: loco_blk_idx = lv_dropdown_get_selected(ui_Loco2BlkSel) - 1;	break;
-			default:
-				snprintf(dbgStr, sizeof(dbgStr), "setLocoBlk: invalid loco index > %d\n", lidx);
-				c_serial_print(dbgStr);
-				return;
-		}
-		
-		if (loco_blk_idx >= 0) {
-			setLocoStartBlock(lidx, loco_blk_idx);
-			setLayoutBlockHighlight(loco_blk_idx, true);
-		}
-	}
-}
-
-//---------------------------------------------------------
-//---------------------------------------------------------
-
-void showRoutes(lv_event_t * e)
-{
-	// Your code here
-}
 
 //---------------------------------------------------------
 //---------------------------------------------------------
@@ -390,9 +357,70 @@ void setLayoutBlockHighlight(uint16_t sensor_idx, bool active)
 }
 
 //---------------------------------------------------------
+// Assign starting block to each locomotive in roster
+//---------------------------------------------------------
+
+void setLocoBlk(lv_event_t * e)
+{
+	lv_obj_t* dropdown = lv_event_get_current_target(e);
+	lv_obj_t* routePanel = lv_obj_get_parent(dropdown);
+
+	int thr_idx = getThrottleIdx(routePanel);
+	if (thr_idx < 0) return;
+
+
+	// dropdown 0 is null selection. Shift dropdown index by 1 to get block index
+	int block_idx = (int)lv_dropdown_get_selected(dropdown) - 1;
+	if (block_idx < 0) return;
+		
+	setLocoStartBlock(thr_idx, block_idx);
+	setLayoutBlockHighlight(block_idx, true);
+}
+
+//---------------------------------------------------------
+// Assign the selected route to current loco
+// open route control panel.
+// Don't start route here. The route is started when
+// user presses the route state button on route control
+// panel
+//---------------------------------------------------------
+
+// Start or stop a route for given loco
+void setRouteState(lv_event_t * e)
+{
+	lv_obj_t* routeStateBtn = lv_event_get_current_target(e);
+	lv_obj_t* routePanel = lv_obj_get_parent(routeStateBtn);
+	lv_obj_t* throttlePanel = lv_obj_get_parent(routePanel);
+
+	int thr_idx = getThrottleIdx(routePanel);
+
+	lv_obj_t* routeDropdown = ui_comp_get_child(throttlePanel, UI_COMP_THRCOMP_ROUTEPANEL_ROUTESEL);
+	lv_obj_t* btnLabel = ui_comp_get_child(throttlePanel, UI_COMP_THRCOMP_ROUTEPANEL_ROUTESTART_ROUTEBTNLABEL);
+
+	int route_index = lv_dropdown_get_selected(routeDropdown);
+	
+	// disable the start button. It will be enabled when the route is done.
+	bool routeInactive = lv_obj_has_state(routeStateBtn, LV_STATE_USER_1);
+	if (routeInactive) {
+		// route is inactive. make it active and update button state
+		lv_obj_clear_state(routeStateBtn, LV_STATE_USER_1);
+		lv_obj_add_state(routeStateBtn, LV_STATE_USER_2);
+		lv_label_set_text(btnLabel, "Stop");
+		startDccRoute(thr_idx, route_index);
+	}
+	else {
+		lv_obj_clear_state(routeStateBtn, LV_STATE_USER_2);
+		lv_obj_add_state(routeStateBtn, LV_STATE_USER_1);
+		lv_label_set_text(btnLabel, "Start");
+		stopDccRoute(route_index);
+	}
+}
+
+//---------------------------------------------------------
 // The keyboard input is used for sending raw commands to
 // DCC-EX command station
 //---------------------------------------------------------
+
 void getKeyboardText(lv_event_t * e)
 {
 	lv_obj_t * kb = lv_event_get_target(e); 
@@ -412,7 +440,3 @@ void powerOff(lv_event_t * e)
 }
 
 
-void resetHal(lv_event_t * e)
-{
-		sendDccExCmd("D HAL RESET");
-}

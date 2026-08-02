@@ -22,6 +22,7 @@ SET(SOURCES ui_comp_thrcomp.c
     ui_img_sound_wave_png.c
     ui_img_sound_off_png.c
     ui_img_sound_png.c
+    ui_img_close_png.c
     ui_img_dccex_logo_png.c)
 
 add_library(ui ${SOURCES})

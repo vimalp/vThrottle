@@ -49,7 +49,6 @@ int16_t       turnoutList[NUM_TURNOUTS];
 // block occupancy sensor list
 int16_t       sensorList[NUM_BLOCK_SENSORS];
 
-
 //--------------------------------------------------------
 // wifi config
 //--------------------------------------------------------
@@ -238,7 +237,7 @@ void setup()
 
   // load main ui screen
   lv_scr_load_anim(ui_Home, LV_SCR_LOAD_ANIM_MOVE_LEFT, 500, 0, false);
-  lv_label_set_text(ui_version, VERSION);
+  lv_label_set_text(ui_MainTitle, VERSION);
   
   Serial.println( "Setup done" );
 }
@@ -259,7 +258,7 @@ void init_dcc_lists()
   // wait unti all lists are recieved.
   while (!dccexProtocol.receivedLists()) {
      // request loco roster list and turnout lists
-    dccexProtocol.getLists(true, true, false, false, true);
+    dccexProtocol.getLists(true, true, true, false, true);
     dccexProtocol.check();
     delay(100);
   }

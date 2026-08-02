@@ -114,3 +114,23 @@ def setLocoBlk(event_struct):
 def resetHal(event_struct):
     return
 
+
+def selectRoute(event_struct):
+    return
+
+
+def stopRoute(event_struct):
+    return
+
+
+def setRouteState(event_struct):
+    return
+
+
+def setLocoRoute(event_struct):
+    return
+
+
+def closeRoute(event_struct):
+    return
+
