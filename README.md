@@ -61,7 +61,7 @@ After downloading the project files and installing all libraries, configure Ardu
 * **DCC-EX button:**  This button will bringup a keyboard to enter and send native DCC-EX commands to the command station.
 
 ## License
-The software is free to download and use. 
+MIT License
 
 ## Disclaimer
 The author assumes no liabilty on the use of software or any bugs contained therein.
